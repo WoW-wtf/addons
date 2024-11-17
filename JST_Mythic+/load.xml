@@ -1,0 +1,14 @@
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Include file="AraKara\modules.xml"/>
+	<Include file="CinderbrewMeadery\modules.xml"/>
+	<Include file="CityOfThreads\modules.xml"/>
+	<Include file="DarkflameCleft\modules.xml"/>
+	<Include file="PrioryOfTheSacredFlame\modules.xml"/>
+	<Include file="TheDawnbreaker\modules.xml"/>
+	<Include file="TheRookery\modules.xml"/>
+	<Include file="TheStonevault\modules.xml"/>
+	<Include file="MistsOfTirnaScithe\modules.xml"/>
+	<Include file="SiegeofBoralus\modules.xml"/>
+	<Include file="GrimBatol\modules.xml"/>
+	<Include file="TheNecroticWake\modules.xml"/>
+</Ui>

@@ -1,0 +1,9 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+
+	<Script file="0_Trash.lua"/>
+	<Script file="1_EDNA.lua"/>
+	<Script file="2_Skarmorak.lua"/>
+	<Script file="3_ForgeSpeakers.lua"/>
+	<Script file="4_HighSpeakerEirich.lua"/>
+
+</Ui>

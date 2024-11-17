@@ -1,0 +1,16 @@
+## Interface: 110005
+## Title : Tome of Teleportation
+## Notes: An interface for managing teleportation spells and items.
+## Author: Remeen
+## SavedVariablesPerCharacter: TomeOfTele_Options,TomeOfTele_ShareOptions
+## SavedVariables: TomeOfTele_OptionsGlobal,TomeOfTele_IconGlobal
+## IconTexture: Interface\Icons\Spell_Arcane_TeleportDalaran
+
+libs\embeds.xml
+libs\LibDBIcon-1.0\lib.xml
+TeleporterSpell.lua
+TomeQuickMenu.lua
+TomeOfTeleportationSettings.lua
+TomeOfTeleportation.lua
+TomeOfTeleportation.xml
+Spells.lua

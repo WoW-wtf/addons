@@ -1,0 +1,10 @@
+tag b108ee0b83be3b8791ffee1d4cf7e42dd28c5a21 2.1.6-bugfix
+Author:	Leeroy Lee <Sanluli36li@outlook.com>
+Date:	Mon Nov 11 01:45:20 2024 +0800
+
+commit d79e5321b2f05dc0b8da764b63509f2363c9a991
+Author: Leeroy Lee <Sanluli36li@outlook.com>
+Date:   Mon Nov 11 01:45:13 2024 +0800
+
+    Revert and add dialog
+

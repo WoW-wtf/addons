@@ -1,0 +1,9 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+
+	<Script file="0_Trash.lua"/>
+	<Script file="1_BrewMasterAldryr.lua"/>
+	<Script file="2_Ipa.lua"/>
+	<Script file="3_BenkBuzzbee.lua"/>
+	<Script file="4_GoldieBaronbottom.lua"/>
+
+</Ui>

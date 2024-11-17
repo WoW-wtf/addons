@@ -1,0 +1,9 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+
+	<Script file="0_Trash.lua"/>
+	<Script file="1_Blightbone.lua"/>
+	<Script file="2_Amarth.lua"/>
+	<Script file="3_SurgeonStitchflesh.lua"/>
+	<Script file="4_Nalthor.lua"/>
+
+</Ui>

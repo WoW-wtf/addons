@@ -1,0 +1,10 @@
+﻿## Interface: 110005
+## Title: |cffff0000Jingsi|r Tools NerubarPalace
+## Title-zhCN: |cffff0000静思|r 副本助手 尼鲁巴尔王宫
+## Version: 1.00
+## Dependencies: JST
+## X-JST-journalInstanceID: 1273
+## Author: Paopao001
+## IconTexture: Interface\AddOns\JST\media\logo.png
+
+load.xml

@@ -1,0 +1,9 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+
+	<Script file="0_Trash.lua"/>
+	<Script file="1_OlWaxbeard.lua"/>
+	<Script file="2_Blazikon.lua"/>
+	<Script file="3_TheCandleKing.lua"/>
+	<Script file="4_TheDarkness.lua"/>
+
+</Ui>

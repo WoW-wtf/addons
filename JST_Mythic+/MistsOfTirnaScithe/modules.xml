@@ -1,0 +1,8 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+
+	<Script file="0_Trash.lua"/>
+	<Script file="1_IngraMaloch.lua"/>
+	<Script file="2_Mistcaller.lua"/>
+	<Script file="3_Tredova.lua"/>
+
+</Ui>

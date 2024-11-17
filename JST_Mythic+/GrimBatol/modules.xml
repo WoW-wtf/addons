@@ -1,0 +1,9 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+
+	<Script file="0_Trash.lua"/>
+	<Script file="1_GeneralUmbriss.lua"/>
+	<Script file="2_SchmiedemeisterThrongus.lua"/>
+	<Script file="3_DrahgaSchattenbrenner.lua"/>
+	<Script file="4_Erudax.lua"/>
+
+</Ui>

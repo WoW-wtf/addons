@@ -1,0 +1,10 @@
+﻿## Interface: 110005
+## Title: |cffff0000Jingsi|r Tools Mythic+
+## Title-zhCN: |cffff0000静思|r 大秘境
+## Version: 1.00
+## Dependencies: JST
+## X-JST-journalInstanceID: 1001
+## Author: Paopao001
+## IconTexture: Interface\AddOns\JST\media\logo.png
+
+load.xml

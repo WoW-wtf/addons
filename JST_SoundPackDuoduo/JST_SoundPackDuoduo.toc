@@ -1,0 +1,9 @@
+﻿## Interface: 110005
+## Title: |cffff0000Jingsi|r Tools SoundPack Duoduo
+## Title-zhCN: |cffff0000静思|r 副本助手 朵朵语音包
+## Version: 1.02
+## Dependencies: JST
+## Author: Duoduo
+## X-JST-SoundPack-Name: 朵朵语音包(中文)
+## X-JST-SoundPack-File: Interface\AddOns\JST_SoundPackDuoduo\sounds\
+## IconTexture: Interface\AddOns\JST\media\logo.png

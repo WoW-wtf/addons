@@ -1,0 +1,25 @@
+﻿## Interface: 110005
+## IconTexture: Interface/Addons/Whisp/icon.tga
+## Title: Whisp
+## Notes: Makes chatting fun again! Type /whisp for options
+## Version: 20241023
+## Author: Anea et al
+## OptionalDeps: Ace3, LibDataBroker-1.1, SharedMedia-3.0, LibQTip-1.0
+## X-Embeds: Ace3, LibDataBroker-1.1, SharedMedia-3.0
+## X-Category: Chat/Communication
+## SavedVariables: WhispDB
+## X-Curse-Packaged-Version: 20241023n
+## X-Curse-Project-Name: Whisp
+## X-Curse-Project-ID: anea-whisp
+## X-Curse-Repository-ID: wow/anea-whisp/mainline
+
+embeds.xml
+whisp.xml
+
+locale-enUS.lua
+locale-deDE.lua
+locale-zhTW.lua
+core.lua
+options.lua
+
+modules.xml

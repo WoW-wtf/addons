@@ -1,0 +1,8 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+
+	<Script file="0_Trash.lua"/>
+	<Script file="1_Avanoxx.lua"/>
+	<Script file="2_Anubzekt.lua"/>
+	<Script file="3_KikatalTheHarvester.lua"/>
+
+</Ui>

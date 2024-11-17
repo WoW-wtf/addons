@@ -1,0 +1,9 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+
+	<Script file="0_Trash.lua"/>
+	<Script file="1_OratorKrixvizk.lua"/>
+	<Script file="2_FangsOfTheQueen.lua"/>
+	<Script file="3_TheCoaglamation.lua"/>
+	<Script file="4_Izo.lua"/>
+
+</Ui>

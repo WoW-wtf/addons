@@ -1,0 +1,284 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.blizzard.com/wow/ui/" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\..\..\FrameXML\UI.xsd">
+
+  <!--Basic template for Whisp log window -->
+  <Frame name="WhispLogPanel" enableMouse="false" virtual="true">
+    <!--Border-->
+    <!--<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border">
+      <BackgroundInsets>
+        <AbsInset left="4" right="4" top="4" bottom="4"/>
+      </BackgroundInsets>
+      <EdgeSize>
+        <AbsValue val="16"/>
+      </EdgeSize>
+      <BorderColor r="0.6" g="0.6" b="0.6"/>
+    </Backdrop>    -->
+    
+    <Layers>
+      <!-- Title bar -->
+      <Layer level ="BACKGROUND">
+        <Texture file="Interface\ChatFrame\ChatFrameBackground">
+          <Size x="592" y="35"/>
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset x="4" y="-4"/>
+            </Anchor>
+          </Anchors>
+          <Gradient orientation="HORIZONTAL">
+            <MinColor r="0" g="0" b="0" a="0.35"/>
+            <MaxColor r="0.3" g="0.3" b="0.3" a="0.35"/>
+          </Gradient>
+        </Texture>
+      </Layer>
+
+      <Layer level = "OVERLAY">
+        <!-- Icon -->
+        <Texture name="$parentIcon" file="Interface\AddOns\Whisp\icon">
+          <Size x="24" y="24"/>
+          <Anchors>
+            <Anchor point="TOP">
+              <Offset x="-30" y="-10"/>
+            </Anchor>
+          </Anchors>
+          <TexCoords left="0.07" right="0.93" top="0.07" bottom="0.93"/>
+        </Texture>
+
+        <!-- Title -->
+        <FontString name="$parentTitle" font="Fonts\FRIZQT__.TTF" text="Whisp">
+          <Anchors>
+            <Anchor point="TOP">
+              <Offset x="10" y="-14"/>
+            </Anchor>
+          </Anchors>
+          <FontHeight>
+            <AbsValue val="16"/>
+          </FontHeight>
+          <Color r="0.6" g="0.6" b="1" />
+          <Shadow>
+            <Color r="0" g="0" b="0" />
+            <Offset>
+              <AbsDimension x="1" y="-1" />
+            </Offset>
+          </Shadow>
+        </FontString>
+      </Layer>     
+    
+      <!-- Background -->
+      <Layer level ="BACKGROUND">
+        <Texture file="Interface\ChatFrame\ChatFrameBackground">
+          <Anchors>
+            <Anchor point="TOPLEFT">
+              <Offset x="4" y="-4"/>
+            </Anchor>
+            <Anchor point="BOTTOMRIGHT">
+              <Offset x="-4" y="4"/>
+            </Anchor>
+          </Anchors>
+          <Gradient orientation="VERTICAL">
+            <MinColor r="0" g="0" b="0" a="0.75"/>
+            <MaxColor r="0.3" g="0.3" b="0.3" a="0.75"/>
+          </Gradient>
+        </Texture>
+      </Layer>
+    </Layers>
+
+    <!--Close button -->
+    <Frames>
+      <Button name="$parentClose" inherits="UIPanelCloseButton">
+        <Anchors>
+          <Anchor point="TOPRIGHT"/>
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            HideUIPanel(self:GetParent():GetParent())
+          </OnClick>
+        </Scripts>
+      </Button>
+    </Frames>
+    
+    <Scripts>
+      <OnMouseDown>
+        self:GetParent():StartMoving()
+      </OnMouseDown>
+      <OnMouseUp>
+        self:GetParent():StopMovingOrSizing()
+      </OnMouseUp>
+    </Scripts>
+  </Frame>
+
+  <!--Button template -->
+  <Button name="WhispButton" virtual="true">
+    <NormalFont style="GameFontNormalSmall"/>
+    <HighlightFont style="GameFontHighlightSmall"/>
+    <DisabledFont style="GameFontHighlightSmall"/>
+<!--
+    <Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border">
+      <BackgroundInsets>
+        <AbsInset left="4" right="4" top="4" bottom="4"/>
+      </BackgroundInsets>
+      <EdgeSize>
+        <AbsValue val="16"/>
+      </EdgeSize>
+      <BorderColor r="0.6" g="0.6" b="0.6"/>
+    </Backdrop>
+-->
+    <ButtonText name="$parentText">
+      <Anchors>
+        <Anchor point="CENTER">
+          <Offset x="0" y="1"/>
+        </Anchor>
+      </Anchors>
+    </ButtonText>
+
+    <NormalTexture file="Interface\ChatFrame\ChatFrameBackground">
+      <Anchors>
+        <Anchor point="TOPLEFT">
+          <Offset x="4.5" y="-4.5"/>
+        </Anchor>
+        <Anchor point="BOTTOMRIGHT">
+          <Offset x="-4.5" y="4.5"/>
+        </Anchor>
+      </Anchors>
+
+      <Gradient orientation="VERTICAL">
+        <MinColor r="0.2" g="0" b="0"/>
+        <MaxColor r="0.5" g="0" b="0"/>
+      </Gradient>
+    </NormalTexture>
+
+    <PushedTexture file="Interface\ChatFrame\ChatFrameBackground">
+      <Anchors>
+        <Anchor point="TOPLEFT">
+          <Offset x="4.5" y="-4.5"/>
+        </Anchor>
+        <Anchor point="BOTTOMRIGHT">
+          <Offset x="-4.5" y="4.5"/>
+        </Anchor>
+      </Anchors>
+
+      <Gradient orientation="VERTICAL">
+        <MinColor r="0.1" g="0" b="0"/>
+        <MaxColor r="0.4" g="0" b="0"/>
+      </Gradient>
+    </PushedTexture>
+
+    <HighlightTexture inherits="UIPanelButtonHighlightTexture"/>
+  </Button>
+
+
+  
+  <!-- Scroll frame and helptext -->
+  <Frame name="WhispUITemplate" inherits="WhispLogPanel" enableMouse="false" virtual="true">
+    <Size x="600" y="550"/>
+    <Frames>
+      <!-- Scroll panel with large editbox -->
+      <ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate" toplevel="true">
+        <Size x="540" y="430"/>
+        <Anchors>
+          <Anchor point="TOPLEFT">
+            <Offset x="20" y="-70"/>
+          </Anchor>
+          <Anchor point="BOTTOMRIGHT">
+            <Offset x="-30" y="40"/>
+          </Anchor>
+        </Anchors>
+<!--
+        <Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border">
+          <BackgroundInsets>
+            <AbsInset left="2" right="2" top="2" bottom="2"/>
+          </BackgroundInsets>
+          <EdgeSize>
+            <AbsValue val="16"/>
+          </EdgeSize>
+          <BorderColor r="0.8" g="0.8" b="0.8"/>
+        </Backdrop>
+-->
+        <Layers>        
+          <Layer level ="BACKGROUND">
+            <Texture file="Interface\ChatFrame\ChatFrameBackground">
+              <Anchors>
+                <Anchor point="TOPLEFT">
+                  <Offset x="4" y="-4"/>
+                </Anchor>
+                <Anchor point="BOTTOMRIGHT">
+                  <Offset x="-4" y="4"/>
+                </Anchor>
+              </Anchors>
+              <Gradient orientation="HORIZONTAL">
+                <MinColor r="0" g="0" b="0" a="0.35"/>
+                <MaxColor r="0.2" g="0.2" b="0.2" a="0.35"/>
+              </Gradient>
+            </Texture>
+          </Layer>
+        </Layers>
+
+        <ScrollChild>
+          <EditBox name="Whisp_EditBox" multiLine="true" letters="99999">
+            <Size x="540" y="430"/>
+
+            <FontString inherits="ChatFontNormal"/>  
+            <Scripts>
+              <OnLoad>
+                self:SetTextInsets(8, 8, 8, 8)
+                self:SetAutoFocus(false)
+              </OnLoad>
+              <OnTextChanged>
+                local s = WhispUIScrollFrameScrollBar
+                self:GetParent():UpdateScrollChildRect()
+                local _, m = s:GetMinMaxValues()
+                if m > 0 and self.max ~= m then
+                  self.max = m
+                  s:SetValue(m)
+                end
+              </OnTextChanged>
+              <OnCursorChanged>
+                ScrollingEdit_OnCursorChanged(self, x, y, w, h)
+              </OnCursorChanged>
+              <OnUpdate>
+                ScrollingEdit_OnUpdate(self)
+              </OnUpdate>              
+            </Scripts>
+          </EditBox>
+        </ScrollChild>
+      </ScrollFrame>
+
+      <!-- Close -->
+      <Button name="Whisp_Close" inherits="WhispButton" text="CLOSE">
+        <Size x="100" y="24"/>
+        <Anchors>
+          <Anchor point="BOTTOM">
+            <Offset x="0" y="5"/>
+          </Anchor>
+        </Anchors>
+        <Scripts>
+          <OnClick>
+            HideUIPanel(self:GetParent():GetParent())
+          </OnClick>
+        </Scripts>
+      </Button>      
+      
+    </Frames>
+  </Frame>
+  
+  <!--Create old style window -->
+  <Frame name="WhispUIParent" clampedToScreen="true" toplevel="false" hidden="true" movable="true" parent="UIParent">
+    <Size x="600" y="550"/>
+
+    <Anchors>
+      <Anchor point="CENTER"/>
+    </Anchors>
+
+    <Frames>
+      <Frame name="WhispUI" inherits="WhispUITemplate">
+        <Anchors>
+          <Anchor point="CENTER"/>
+        </Anchors>
+      </Frame>
+    </Frames>
+
+    <Scripts>
+      <OnLoad>
+        tinsert(UISpecialFrames, self:GetName())
+      </OnLoad>
+    </Scripts>
+  </Frame>
+</Ui>

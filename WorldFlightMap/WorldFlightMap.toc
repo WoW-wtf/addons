@@ -1,0 +1,9 @@
+## Interface: 100000
+## Title: WorldFlightMap
+## Notes: Replaces the regular flight map with the world map
+## Author: Semlar
+## Version: 10.0.0.0
+## Dependencies: Blizzard_FlightMap
+
+LinePool.lua
+WorldFlightMap.lua

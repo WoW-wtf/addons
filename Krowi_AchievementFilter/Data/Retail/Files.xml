@@ -1,0 +1,6 @@
+<Ui>
+    <Script file="ExportedAchievements.lua" />
+    <Script file="ExportedCategories.lua" />
+    <Script file="ExportedTransmogSets.lua" />
+    <Script file="ExportedUiMaps.lua" />
+</Ui>

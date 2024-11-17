@@ -1,0 +1,24 @@
+## Interface: 110005
+## Title: SanluliUtils
+## Notes: Sanluli36li's Utils
+## Notes-zhCN: 三鹿李的一些小工具
+## Notes-zhTW: 三鹿李的一些小工具
+## Author: Sanluli36li (Olddruid@CN-Galakrond)
+## Version: 2.1.6-bugfix
+## SavedVariables: SanluliUtilsDB
+## IconTexture: 625999
+## X-Curse-Project-ID: 1089806
+## X-Wago-ID: j6jz846R
+
+Libs\libs.xml
+
+Core.lua
+
+Locales\locales.xml
+
+Settings.lua
+General.lua
+BlizzardUI.lua
+AddOns.lua
+Client.lua
+Social.lua

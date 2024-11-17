@@ -1,0 +1,15 @@
+## Interface: 20504
+## Title:|cffffe00a<|r|cffff7d0aDBM Media|r|cffffe00a>|r |cff308530Voicepack GYJ|r
+## Title-zhCN:|cffffe00a<|r|cffff7d0aDBM Media|r|cffffe00a>|r |cff308530顾衣衿语音包|r
+## Title-zhTW:|cffffe00a<|r|cffff7d0aDBM Media|r|cffffe00a>|r |cff308530顾衣衿語音包|r
+## DefaultState: enabled
+## RequiredDeps: DBM-Core
+## Author: 顾衣衿
+## IconTexture: Interface\AddOns\DBM-Core\textures\dbm_airhorn
+
+## Notes: http://bbs.nga.cn/read.php?tid=30924974
+## X-DBM-Voice: 1
+## X-DBM-Voice-Name: 顾衣衿(普通话女)
+## X-DBM-Voice-ShortName: 顾衣衿
+## X-DBM-Voice-Version: 17
+## X-DBM-Voice-HasCount: 1
