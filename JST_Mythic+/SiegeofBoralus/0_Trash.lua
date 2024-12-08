@@ -98,7 +98,7 @@ G.Encounters["1023Trash"] = {
 					type = "com",
 					spellID = 256639,
 					hl = "yel_flash",
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 				{ -- 团队框架图标 火焰炸弹
 					category = "RFIcon",
@@ -196,7 +196,7 @@ G.Encounters["1023Trash"] = {
 					type = "com",
 					spellID = 454438,
 					hl = "yel_flash",
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 				{ -- 团队框架图标 艾泽里特炸药
 					category = "RFIcon",
@@ -269,7 +269,7 @@ G.Encounters["1023Trash"] = {
 					spellID = 272422,
 					hl = "yel_flash",
 					sound = "[mindstep]",
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 				{ -- 计时条 瞄准火炮
 					category = "AlertTimerbar",

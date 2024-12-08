@@ -137,5 +137,21 @@ G.Encounters[2391] = {
 				},
 			},
 		},
+		{ -- 寒冰箭雨
+			spells = {
+				{328667, "6"},
+			},
+			options = {
+				{ -- 姓名板自动打断图标 寒冰箭雨
+					category = "PlateAlert",
+					type = "PlateInterruptAuto",
+					spellID = 328667,
+					mobID = "164414",
+					spellCD = 40,
+					ficon = "6",
+					hl_np = true,
+				},
+			},
+		},
 	},
 }

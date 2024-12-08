@@ -1,9 +1,11 @@
 --@curseforge-project-slug: libspecialization@
+--更新：以GUID区分不同的服务器
+
 local wowID = WOW_PROJECT_ID
 local cataWowID = 14
 if wowID ~= 1 and wowID ~= cataWowID then return end -- Retail and Cata
 
-local LS, oldminor = LibStub:NewLibrary("LibSpecialization", 10)
+local LS, oldminor = LibStub:NewLibrary("LibSpecializationEdit", 10)
 if not LS then return end -- No upgrade needed
 
 LS.callbackMap = LS.callbackMap or {}
@@ -228,11 +230,12 @@ local C_ClassTalents_GetActiveConfigID = C_ClassTalents and C_ClassTalents.GetAc
 local C_Traits_GenerateImportString = C_Traits.GenerateImportString
 local SendAddonMessage, CTimerAfter = C_ChatInfo.SendAddonMessage, C_Timer.After
 local pName = UnitName("player")
+local pGUID = UnitGUID("player")
 
 do
-	local _, result = C_ChatInfo.RegisterAddonMessagePrefix("LibSpec")
+	local _, result = C_ChatInfo.RegisterAddonMessagePrefix("LibGUIDSpec")
 	if type(result) == "number" and result > 2 then
-		error("LibSpecialization: Failed to register the addon prefix.")
+		error("LibSpecializationEdit: Failed to register the addon prefix.")
 	end
 end
 
@@ -246,13 +249,13 @@ do
 			timerInstance = false
 			if IsInGroup(2) then
 				if currentRole then -- Cataclysm Feral Druids
-					local _, result = SendAddonMessage("LibSpec", format("%d,,%s", currentSpecId, currentRole), "INSTANCE_CHAT")
+					local _, result = SendAddonMessage("LibGUIDSpec", format("%s,%d,,%s", pGUID, currentSpecId, currentRole), "INSTANCE_CHAT")
 					if result == 9 then
 						timerInstance = true
 						CTimerAfter(3, SendToInstance)
 					end
 				else
-					local _, result = SendAddonMessage("LibSpec", format("%d,%s", currentSpecId, currentTalentString or ""), "INSTANCE_CHAT")
+					local _, result = SendAddonMessage("LibGUIDSpec", format("%s,%d,%s", pGUID, currentSpecId, currentTalentString or ""), "INSTANCE_CHAT")
 					if result == 9 then
 						timerInstance = true
 						CTimerAfter(3, SendToInstance)
@@ -281,13 +284,13 @@ do
 			timerGroup = false
 			if IsInGroup(1) then
 				if currentRole then -- Cataclysm Feral Druids
-					local _, result = SendAddonMessage("LibSpec", format("%d,,%s", currentSpecId, currentRole), "RAID") -- RAID auto downgrades to PARTY as needed
+					local _, result = SendAddonMessage("LibGUIDSpec", format("%s,%d,,%s", pGUID, currentSpecId, currentRole), "RAID") -- RAID auto downgrades to PARTY as needed
 					if result == 9 then
 						timerGroup = true
 						CTimerAfter(3, SendToGroup)
 					end
 				else
-					local _, result = SendAddonMessage("LibSpec", format("%d,%s", currentSpecId, currentTalentString or ""), "RAID") -- RAID auto downgrades to PARTY as needed
+					local _, result = SendAddonMessage("LibGUIDSpec", format("%s,%d,%s", pGUID, currentSpecId, currentTalentString or ""), "RAID") -- RAID auto downgrades to PARTY as needed
 					if result == 9 then
 						timerGroup = true
 						CTimerAfter(3, SendToGroup)
@@ -316,7 +319,7 @@ do
 	}
 	frame:SetScript("OnEvent", function(_, event, prefix, msg, channel, sender)
 		if event == "CHAT_MSG_ADDON" then
-			if prefix == "LibSpec" and approved[channel] then -- Only approved channels
+			if prefix == "LibGUIDSpec" and approved[channel] then -- Only approved channels
 				if msg == "R" then
 					if channel == "INSTANCE_CHAT" then
 						PrepareForInstance()
@@ -326,7 +329,7 @@ do
 					return
 				end
 
-				local spec, talentString, cataDruidRole = strsplit(",", msg)
+				local playerGUID, spec, talentString, cataDruidRole = strsplit(",", msg)
 				local specId = tonumber(spec)
 				local role, position = roleTable[specId], positionTable[specId]
 				if role and position then
@@ -337,10 +340,9 @@ do
 							return
 						end
 					end
-					local playerName = Ambiguate(sender, "none")
 					local talents = talentString and #talentString > 2 and talentString or nil
 					for _,func in next, callbackMap do
-						func(specId, role, position, playerName, talents)
+						func(specId, role, position, playerGUID, talents)
 					end
 				end
 			end
@@ -358,7 +360,7 @@ do
 				local specId, role, position, talentString = LS:MySpecialization()
 				if specId then
 					for _,func in next, callbackMap do
-						func(specId, role, position, pName, talentString) -- This allows us to show our own spec info when not grouped
+						func(specId, role, position, pGUID, talentString) -- This allows us to show our own spec info when not grouped
 					end
 				end
 			end
@@ -392,7 +394,7 @@ function LS:MySpecialization()
 					end
 					return specId, role, position
 				else
-					error(format("LibSpecialization: Unknown specId %q", specId))
+					error(format("LibSpecializationEdit: Unknown specId %q", specId))
 				end
 			end
 		end
@@ -412,7 +414,7 @@ function LS:MySpecialization()
 					end
 					return specId, role, position
 				elseif not starterSpecs[specId] then
-					error(format("LibSpecialization: Unknown specId %q", specId))
+					error(format("LibSpecializationEdit: Unknown specId %q", specId))
 				end
 			end
 		end
@@ -426,7 +428,7 @@ do
 		local specId, role, position, talentString = LS:MySpecialization()
 		if specId then
 			for _,func in next, callbackMap do
-				func(specId, role, position, pName, talentString) -- This allows us to show our own spec info when not grouped
+				func(specId, role, position, pGUID, talentString) -- This allows us to show our own spec info when not grouped
 			end
 		end
 
@@ -436,10 +438,10 @@ do
 				timer = false
 				prev = t
 				if IsInGroup(2) then
-					SendAddonMessage("LibSpec", "R", "INSTANCE_CHAT")
+					SendAddonMessage("LibGUIDSpec", "R", "INSTANCE_CHAT")
 				end
 				if IsInGroup(1) then
-					SendAddonMessage("LibSpec", "R", "RAID")
+					SendAddonMessage("LibGUIDSpec", "R", "RAID")
 				end
 			elseif not timer then
 				timer = true
@@ -455,7 +457,7 @@ end
 
 function LS:Register(addon, func)
 	if not addon or addon == LS then
-		error("LibSpecialization: You must pass your own addon name or object to :Register.")
+		error("LibSpecializationEdit: You must pass your own addon name or object to :Register.")
 	end
 
 	local t = type(func)
@@ -464,13 +466,13 @@ function LS:Register(addon, func)
 	elseif t == "function" then
 		callbackMap[addon] = func
 	else
-		error("LibSpecialization: Incorrect function type for :Register.")
+		error("LibSpecializationEdit: Incorrect function type for :Register.")
 	end
 end
 
 function LS:Unregister(addon)
 	if not addon or addon == LS then
-		error("LibSpecialization: You must pass your own addon name or object to :Unregister.")
+		error("LibSpecializationEdit: You must pass your own addon name or object to :Unregister.")
 	end
 	callbackMap[addon] = nil
 end

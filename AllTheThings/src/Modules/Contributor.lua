@@ -76,6 +76,7 @@ end
 
 local function AddReportData(reporttype, id, data)
 	-- app.PrintDebug("Contributor.AddReportData",reporttype,id)
+	-- app.PrintTable(data)
 	local reportData = Reports[reporttype][id]
 	if type(data) == "table" then
 		for k,v in pairs(data) do
@@ -131,11 +132,14 @@ end
 -- These should be NPCs which are mobile in that they can have completely variable coordinates in game
 -- either by following the player or having player-based decisions that cause them to have any coordinates
 local MobileNPCDB = {
+	   [951] = true,	-- Brother Paxton
 	 [19644] = true,	-- Image of Archmage Vargoth
+	 [19935] = true,	-- Soridormi
 	 [23870] = true,	-- Ember Clutch Ancient
 	 [26206] = true,	-- Keristrasza
 	 [29795] = true,	-- Kolitra Deathweaver (Orgrim's Hammer)
 	 [30216] = true,	-- Vile
+	 [34653] = true,	-- Bountiful Table Hostess
 	 [43929] = true,	-- Blingtron 4000
 	 [52234] = true,	-- Bwemba
 	 [55497] = true,	-- Zin'Jun
@@ -175,6 +179,7 @@ local MobileNPCDB = {
 	[145005] = true,	-- Lor'themar Theron
 	[145707] = true,	-- Advisor Belgrum
 	[153897] = true,	-- Blingtron 7000
+	[158544] = true,	-- Lord Herne
 	[158635] = true,	-- Xolartios <Eternal Traveler>
 	[172854] = true,	-- Dredger Butler
 	[185749] = true,	-- Gnoll Mon-Ark
@@ -183,6 +188,7 @@ local MobileNPCDB = {
 	[209681] = true,	-- Squally
 	[214890] = true,	-- Magni Bronzebeard
 	[214892] = true,	-- Dagran Thaurissan II
+	[220307] = true,	-- Holiday Enthusiast
 	[220859] = true,	-- Amy Lychenstone
 	[221492] = true,	-- Baron Sybaestan Braunpyke
 	[221867] = true,	-- Mereldar Child
@@ -217,6 +223,9 @@ local GuidTypeProviders = {
 
 local ProviderTypeChecks = {
 	n = function(objID, objRef, providers, providerID)
+		-- app.PrintDebug("Check.n",objID,providerID,app:SearchLink(objRef))
+		-- app.PrintTable(providers)
+		-- app.PrintTable(objRef.qgs)
 		local found
 		-- n providers are turned into qgs on quest objects
 		local qgs = objRef.qgs
@@ -321,13 +330,13 @@ local function OnQUEST_DETAIL(...)
 			local questParent = questRef.parent
 			if questParent and questParent.__type == "NPC" then
 				if not Check_coords(questParent, questParent[questParent.key], mapID, px, py) then
-					AddReportData("quest",questID,{
+					AddReportData(questRef.__type,questID,{
 						questID = questID,
 						MissingCoords = "No Coordinates for this quest under NPC!",
 					})
 				end
 			else
-				AddReportData("quest",questID,{
+				AddReportData(questRef.__type,questID,{
 					questID = questID,
 					MissingCoords = "No Coordinates for this quest!",
 				})

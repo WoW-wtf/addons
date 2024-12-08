@@ -1,107 +1,97 @@
 # AllTheThings
 
-## [4.1.8](https://github.com/ATTWoWAddon/AllTheThings/tree/4.1.8) (2024-11-15)
-[Full Changelog](https://github.com/ATTWoWAddon/AllTheThings/compare/4.1.7...4.1.8) [Previous Releases](https://github.com/ATTWoWAddon/AllTheThings/releases)
+## [4.1.11](https://github.com/ATTWoWAddon/AllTheThings/tree/4.1.11) (2024-12-01)
+[Full Changelog](https://github.com/ATTWoWAddon/AllTheThings/compare/4.1.10...4.1.11) [Previous Releases](https://github.com/ATTWoWAddon/AllTheThings/releases)
 
-- Add note on BRD key caps  
-- Sort some hqts  
-- Add new guest relations secrets  
-- [GitHub Action] Extend the artifact retention days from 1 to 7.  
-- [GitHub Action] Alpha release changes from weekly builds to daily builds.  
-- Removed Hidden Categories Window due to a major bug.  
-    I'll add this in the future when I'll have working solution that won't be re-writing current categories.  
-- [GitHub Action] Run All flavors in single job.  
-- [GitHub Action] Build with multi flavors.  
-- Deepen history in a different way  
-- Fetch the last 2 tags  
-- Fetch tags manually  
-    Can't do that through actions/checkout due to https://github.com/actions/checkout/issues/1467  
-- Try fetching through actions/checkout  
-- [GitHub Action] Add job depends.  
-- [GitHub Action] Fetch without all tags.  
-- [GitHub Action] Remove dummy fetch.  
-- [GitHub Action] Limit Fetch to only the latest 200 commits.  
-- [Github Action] clone without LFS.  
-- [GitHub Action] Remove delete db files.  
-- [Github Action] Update artifact flow from v3 to v4.  
-- [GitHub Action] hybrid build flow test phase 1.  
-- PTR: 11.0.7 build 57528  
-- Retail: More localisation, added questID for previous TW week  
-    wow anniversary fix for text field replace itself with static text  
-- ShouldExcludeFromTooltip should also apply to object tooltips. (noticed in Hellfire Ramparts)  
-- But like actually this time  
-- Update guest relations quest and hqts  
-- Add new guest relations secrets  
-- ZG: removes descriptions from faulty artifacts.  
-- Retail: localisation (a bit) and sneaky ptr update  
-- Added a few tags to faction/class restricted Mounts  
-- Fixed flags in Hidden Categories window.  
-- Added Hidden Categories Window: /att hidden  
-    Individual sub-categories can still be called with commands: nyi, hat, hct, hqt, sourceless, unsorted  
-- Non-consequential Parser code changes from trying to debug stuff  
-- Guest Relations Temp Object Data  
-- Removed some pointless filter assignments on Achievements  
-- Add 11.0.7 MoP timewalking rewards  
-- Update guest relations secrets  
-- Classic: Fixed a Lua error when trying to plot waypoints  
-- Migrated all ExplorationDBs into version-specific files  
-    Reparsed all versions  
-- Parser: Now includes the constant 'debugging' metatable at the end of the localizationDB instead of in a non-related file  
-    Migrated Presets.lua into Retail/Classic ClassPresetsDB.lua  
-    Reparse all flavors to remove reliance on Presets.lua  
-- Bag of Timewarped Badges contains Timewarped Badges  
-- Moved Retail ExplorationDB to ExportDB for consistency and removal from /db/ folder  
-- ExportDB can now store '\_Compressed' keys to indicate which DB outputs should be compressed instead of including newlines for each key  
-    AccountWideQuestsDB and ReagentsDB will now be compressed in ReferenceDB  
-- Added some of the TWW Hidden Currencies.  
-- Added some HAT timelines and changed them all into ADDED instead of CREATED.  
-- Added Hidden Currency Triggers / Trackers.  
-- Update zhCN locales (#1848)  
-- More BFA metas  
-- Removed warnings for 'Player'-shared Quests in Contributor mode  
-- Parser: Can use '\_forcetimeline' to ensure that the applied timeline of a group does not get ignored due to a parent group with an earlier removal (only needed in rare circumstances)  
-    Adjusted a couple 13th anniversary quests to be accurate  
-- Updates  
-- Update Guest Relations.lua  
-    Lets fix this provider  
-- Removed notes from BC Vendor Ensembles since they're learned 100% after relog  
-- Parser: Removed Ensemble Cleanup logic as it has become apparent that Blizz now properly grants all Appearances even when Class/Armor differentiated from the general requirements of the Ensemble (Please report any weird Ensemble issues if encountered of course)  
-- Update The Theater Troupe.lua  
-    Coord fix  
-- With parse we sometimes can fix incorrect id's  
-- FIxed ranks and ordering of some JC SL recipes (fixes #1729)  
-- Add some new 11.0.7 meta achievements and new Cata/Legion timewalking rewards  
-- Adjusted areaID value checking slightly when checking player location exploration (fixes #1847)  
-- Add new guest relations quest  
-- Retail: Don't think we want to arbitrarily mark all quest objectives as uncollectible...  
+- Data parsing is converting data from one format to another. Widely used for data structuring, it is generally done to make the existing, often unstructured, unreadable data more comprehensible  
+- Verify December 2024 Trading post, bump build number  
+- Exploration: Outland (powered by Darkal the Explorer)  
+- Added NPC tooltip hook for Plentiful Perplexing Puzzles (likely others missing from other delve varieties)  
+- Add remaining December 2024 trading post items  
+- Added map for the Archives quests  
+- added couple trading post items, rest when wowhead posts them since im too lazy to manually type every itemid/name  
+- Shifted various Legendary Raid groups to match other more recent Legendary Raid Item headers using the actual Item/Achievement name(s) for proper localization  
+    Sulfuras isn't a direct raid drop; moved to standard Legendary Item header structure for clarity  
+    Added some missing initial Dragonwrath quest data for Alliance  
+- Fixed an issue with the Contribute setting where certain aspects of Quest checks might not be applied to the resulting report  
+- You no take candle! (Elwynn Forest exploration, vendors and quests)  
+    Descriptions on removed quests were added below "timelines" on purpose. Some of them get marked as Completed when you complete a post-Cataclysm re-vamped quest.  
+- Added Splintered Spark of Awakening as a CBD in DF w/ attached Currency tracker for drop limitations  
+    Removed Karazhan Catacombs (46) from being linked to Deadwind Pass (42) due to so much content now being listed in Catacombs  
+    Switched Karazhan Catacombs header to be a raw map due to the amount of content listed in this Zone (TBD -- probably put entire Felcycle Secret under it's own Secret header instead of nested under unrelated Guest Relations)  
+- Adjusted logic for Nat Pagle, Angler Extreme's OnUpdate slightly.  
+- Update zhCN locales (#1855)  
+- Jade Forest: Correcting timeline for 'The Art of War'.  
+- Northen Barrens: Waptor Twapping clarification.  
+- update 5 O'clock basin secret pets  
+- PTR: yeeted stuff for build 57788  
+- Fix some reported errors  
+- Moved ValidExplorationAreaIDsForClassic into Constants/Miscellaneous.lua to help make Shortcuts less data-spammy  
+- Pilgrim's Bounty: Description for daily quests  
+    The optimal solution would be sharedDescription to every daily, but trying that only have me a headache.  
+- Some exploration encountered while playing  
+    Close #1469, no sourceQuest required.  
+- Retail: Archives weekly (5th week) hqt  
+- Twilight Highlands and Vashj'ir descriptions  
+- Catch explorations which have api accessible coordinates in classic era, fix tabs  
+- Update Achievements.lua  
+- Classic: Added an "Enable Battle.net" checkbox on /attsync to bypass Battle.net syncing while its busted.  
+- Add 7 O'clock basin watcher statue HQTs, strip exploration(507)  
+- Adjusted the visit\_exploration shortcut so that Classic verisons can revert specific AreaID's to being collectible via confirmed valid API detection in the respective version  
+- Add December trading post (?) why is it so small  
+- Retail: bunch of exploration stuff  
+- Retail: figure out for what mount this hqt was  
+- Remaining Mythic NP HQTs  
+- Add some exploration areas, fix some reported errors  
+- Exploration: Pandaria  
+- Exploration: Draenor  
+- adjustment to A Surprising Investigation secret note  
+- Clarify on 'nothing to select' message when using /attrandom  
+- A few missing Felcycle step HQTs  
+- Many various minor data tweaks from #retail-errors  
+- Something, something, minor preprocessor and exploration stuff  
+- Removed non-required sq for 'Crush the Witherbark'  
+- Some missing quest locking in Desolace  
+- wotlk promos was just an idea  
+- Update InGameShop.lua (#1854)  
+    Not available in the In-Game Shop for Cataclysm Classic (only Retail), and therefore should not appear in Cataclysm Classic.  
+- more classic promo stuff  
+- added cata promos  
+- Update some felcycle notes  
+- Update guest relations and felcycle secrets, fix some reported errors, set a new record for longest description?  
+- Added a 'containsAnyKey' table method  
+- Inaccurate quest check now checks for 'in-game' recursively outwards to ensure that an available quest isn't hidden within a removed header (Parser fixes a lot of these situations automatically currently based on applied timelines, but sometimes the timelines can't imply the persistence of content within a removed header and we need '\_forcetimeline')  
+    Fixed 'Time to Reflect' being hidden in removed header  
+- Exploration was omitted from AccountWide data sync process, causing some Exploration areas to not be counted for AccountWide progress  
+- swapped the 2 latest promo pets  
+- [Quest] Fix Exile's Reach ach info.  
+- razeshi b pet (future promo)  
+- source greedchief pet  
+- added gill'el  
+- make it look a little bit better  
+- note for contributors to find brrrgl pet  
+- ai isnt smart  
+- prime descriptions no longer show on items that have other sources like the bmah  
+- Fix comment typo  
+- [Quest] Update Exile's Reach info.  
+- Fixed an issue related to an API that doesn't exist in Classic Era/Anniversary Realms. C\_TooltipInfo.GetItemByItemModifiedAppearanceID  
+- [Quest] Add sources for BFA guided quest.  
+- PTR: another bunch  
+- PTR: 11.0.7 build 57641 fixes  
+- Update PvP.lua  
+- Retail: Fixed an issue where 'Retrieving data' on ATT rows would be ignored when rendered in a tooltip (leading to coordinates or some other data acting as the top row of the tooltip)  
+- Couple tidbits in Guest Relations & best source for Small Flame Sac  
+- [Quest] 'An Urgent Meeting' is unobtainable.  
+- Merge branch 'master' of https://github.com/ATTWoWAddon/AllTheThings  
+    * 'master' of https://github.com/ATTWoWAddon/AllTheThings:  
+      Update Contributor.lua  
+      Added a new tooltip API call for grabbing Item link from SourceID Filled in a ton of SourceID's based on new tooltip API from 10.2.7  
+      Tweak felcycle listing  
+      some revendreth pet battle notes  
+      Some more felcycle clarifications  
 - Update Contributor.lua  
-    Added Direbeak Hatchling  
-- DF Season 4 Normal Tier Sets are still obtainable in Catalyst from Mythic Dungeon Items.  
-- PTR: 11.0.7 build 57409 data (once more)  
-- Added object data for Drakkari History Tablet.  
-- Cata: Adjusted the Defense Protocol Common Boss Drops header to not show the source outside the mini list so that it obeys the filtering rules established by the presence of the buffs.  
-- Cata/Wrath: Updated the BuffIDs for the rest of the wrath dungeons.  
-- Cata: Updated the BuffIDs in Trial of the Champion's Defense Protocols.  
-- Classic: Fixed a bug with achievements that don't have rewards not showing their meta achievement data.  
-- Added some of the upcoming meta achievements  
-- Reworked Zul'Gurub description again. This time with nomerge so it works as expected.  
-- Fixed MissingItems.txt from stashed changes merge.  
-- Reverting Darkal's changes to Zul'Gurub (it broke descriptions)  
-- Removed some unused commented out code. (now that DPA uses a different format)  
-- Cata: Fixed some incorrect criteriaIDs for Gamma achievements.  
-- Cata: Fixed a bug with Champion of the Frozen Wastes showing under every version of Cyanigosa.  
-- Cata/Wrath: Updated the format of all the Defense Protocol Dungeons.  
-- Whoops, missed one.  
-- Cata: Added maps to the Protocol Inferno Common Boss Drops header.  
-- Cata: Added Protocol Inferno for Heroic+ Cata Dungeons.  
-- Drake of the North Wind also drops from normal mode.  
-- Removed some duplicated listings of Techniques in M+ versions of dungeons  
-- Cata: Added Protocol Inferno dungeon achievements.  
-- Classic: Updated Halls of Lightning and Halls of Stone to utilize the new Defense Protocol Headers.  
-- Parser: Fixed a bug involving negative headerID values generating a non-unique hash for encounterHashes.  
-- fixing hallows end fudge  
-- Elegant Rune already properly linked in the providers list.  
-- Updated Parser to allow nesting encounter data underneath specific headers. (this is prep work for Defense Protocol Alpha, Beta, Gamma, etc)  
-- more old QIs & fixing candy bucket error text for parsing (hi darkal!)  
-- Added a helper for "ShouldExcludeFromTooltip" to replace the relative difficulty logic filtering. This is to allow for non-difficulty headers to also override their source visibility conditionally. (such as for titan rune dungeons, etc)  
-- Moved the creatureID default field to the shared default field section.  
+- Added a new tooltip API call for grabbing Item link from SourceID  
+    Filled in a ton of SourceID's based on new tooltip API from 10.2.7  
+- Tweak felcycle listing  
+- some revendreth pet battle notes  
+- Some more felcycle clarifications  

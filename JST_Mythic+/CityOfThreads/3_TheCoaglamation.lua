@@ -39,6 +39,7 @@ G.Encounters[2600] = {
 					spellID = 442285,
 					effect = 1,
 					tip = L["吸收治疗"],
+					sound = "[move]"
 				},
 			},
 		},
@@ -112,6 +113,7 @@ G.Encounters[2600] = {
 					color = {.68, .38, 1},
 					ficon = "2",
 					text = L["全团AE"],
+					sound = "[aoe]cast"
 				},
 			},
 		},

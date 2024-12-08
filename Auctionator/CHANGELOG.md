@@ -1,6 +1,6 @@
 # Auctionator
 
-## [11.0.14](https://github.com/Auctionator/Auctionator/tree/11.0.14) (2024-10-30)
-[Full Changelog](https://github.com/Auctionator/Auctionator/compare/11.0.13...11.0.14) 
+## [11.0.18](https://github.com/Auctionator/Auctionator/tree/11.0.18) (2024-11-26)
+[Full Changelog](https://github.com/Auctionator/Auctionator/compare/11.0.17...11.0.18) 
 
-- Classic: Update toc for 4.4.1  
+- Add Support Auctionator message on the the about tab  

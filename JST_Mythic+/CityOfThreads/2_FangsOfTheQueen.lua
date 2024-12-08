@@ -142,8 +142,8 @@ G.Encounters[2595] = {
 					type = "cast",
 					spellID = 440468,
 					color = {.57, .92, .99},
-					text = L["全团AE"],
-					sound = "[aoe]cast", 
+					text = L["分担伤害"],
+					sound = "[sharedmg]cast", 
 				},
 				{ -- 图标 冰冻之血
 					category = "AlertIcon",

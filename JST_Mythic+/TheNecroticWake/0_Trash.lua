@@ -114,6 +114,62 @@ G.Encounters["1182Trash"] = {
 				},
 			},
 		},
+		{ -- 黑暗纠缠
+			spells = {
+				{323347},
+			},
+			options = {
+				{ -- 计时条 黑暗纠缠
+					category = "AlertTimerbar",
+					type = "cast",
+					spellID = 323347,
+					color = {0, .7, .2},
+					ficon = "2,7",
+					sound = "[prepare_dispel]cast",
+				},
+				{ -- 团队框架图标 黑暗纠缠
+					category = "RFIcon",
+					type = "Cast",
+					spellID = 323347,
+				},
+				{ -- 图标 黑暗纠缠
+					category = "AlertIcon",
+					type = "aura",
+					aura_type = "HARMFUL",
+					unit = "player",
+					spellID = 323347,		
+					hl = "blu",
+					ficon = "7",
+				},
+			},
+		},
+		{ -- 佐尔拉姆斯之怒
+			spells = {
+				{322756},
+			},
+			options = {
+				{ -- 计时条 佐尔拉姆斯之怒
+					category = "AlertTimerbar",
+					type = "cast",
+					spellID = 322756,
+					color = {0, .7, .2},
+					sound = "[aoe]cast",
+					glow = true,
+				},
+			},
+		},
+		{ -- 通灵箭
+			spells = {
+				{320462},
+			},
+			options = {
+				{ -- 团队框架图标 通灵箭
+					category = "RFIcon",
+					type = "Cast",
+					spellID = 320462,
+				},
+			},
+		},
 		{ -- 排干体液
 			spells = {
 				{334748},
@@ -171,13 +227,13 @@ G.Encounters["1182Trash"] = {
 				{323496},
 			},
 			options = {
-				{ -- 对我施法图标 切肉飞刀
-					category = "AlertIcon",
-					type = "com",
+				{ -- 计时条 切肉飞刀
+					category = "AlertTimerbar",
+					type = "cast",
 					spellID = 323496,
-					spellIDs = {[338653] = true},
-					hl = "yel_flash",
-					msg = {str_applied = "%name %spell"},
+					color = {1, 0, 0},
+					ficon = "5",
+					show_tar = true,
 				},				
 				{ -- 团队框架图标 切肉飞刀
 					category = "RFIcon",
@@ -192,6 +248,8 @@ G.Encounters["1182Trash"] = {
 					spellID = 323471,
 					hl = "org_flash",
 					tip = L["箭头"],
+					sound = "[arrow]",
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 			},
 		},
@@ -221,7 +279,7 @@ G.Encounters["1182Trash"] = {
 					type = "com",
 					spellID = 327393,
 					hl = "yel_flash",
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 				{ -- 团队框架图标 严酷命运
 					category = "RFIcon",
@@ -349,7 +407,7 @@ G.Encounters["1182Trash"] = {
 					type = "com",
 					spellID = 338606,
 					hl = "yel_flash",
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 				{ -- 团队框架图标 病态凝视
 					category = "RFIcon",
@@ -430,7 +488,7 @@ G.Encounters["1182Trash"] = {
 					type = "com",
 					spellID = 333479,
 					hl = "yel_flash",
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 				{ -- 图标 疾病之云
 					category = "AlertIcon",

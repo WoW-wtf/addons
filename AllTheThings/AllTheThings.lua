@@ -2304,7 +2304,6 @@ app.AddEventHandler("OnLoad", function()
 	})
 end)
 
-local GetRelativeDifficulty = app.GetRelativeDifficulty
 local function GetSearchResults(method, paramA, paramB, options)
 	-- app.PrintDebug("GetSearchResults",method,paramA,paramB,...)
 	if not method then
@@ -3445,7 +3444,7 @@ end)();
 (function()
 local C_CreatureInfo_GetRaceInfo = C_CreatureInfo.GetRaceInfo;
 local outgoing,incoming,queue,active = {},{},{},nil;
-local whiteListedFields = { --[["Achievements",]] "AzeriteEssenceRanks", --[["Exploration",]] "Factions", "FlightPaths", "Followers", "GarrisonBuildings", "Quests", "Spells", "Titles" };
+local whiteListedFields = { --[["Achievements",]] "AzeriteEssenceRanks", "Exploration", "Factions", "FlightPaths", "Followers", "GarrisonBuildings", "Quests", "Spells", "Titles" };
 app.CharacterSyncTables = whiteListedFields;
 local function splittoarray(sep, inputstr)
 	local t = {};
@@ -4655,7 +4654,7 @@ local function SearchForMissingItemsRecursively(group, listing)
 	end
 end
 
-function app:CreateMiniListForGroup(group)
+function app:CreateMiniListForGroup(group, forceFresh)
 	-- Criteria now show their Source Achievement properly
 	-- Achievements already fill out their Criteria information automatically, don't think this is necessary now - Runaway
 	-- Is this an achievement lacking some achievement information?
@@ -4680,7 +4679,7 @@ function app:CreateMiniListForGroup(group)
 
 	-- Pop Out Functionality! :O
 	local suffix = app.GenerateSourceHash(group);
-	local popout = app.Windows[suffix];
+	local popout = not forceFresh and app.Windows[suffix];
 	-- force data to be re-collected if this is a quest chain since its logic is affected by settings
 	if group.questID or group.sourceQuests then popout = nil; end
 	-- app.PrintDebug("Popout for",suffix,"showing?",showing)
@@ -5086,7 +5085,8 @@ app.AddEventHandler("RowOnEnter", function(self)
 
 	-- Default top row line if nothing is generated from a link.
 	if tooltip:NumLines() < 1 then
-		tooltipInfo[#tooltipInfo + 1] = { left = reference.text }
+		-- sometimes text is nil
+		tooltipInfo[#tooltipInfo + 1] = { left = reference.text or RETRIEVING_DATA }
 	end
 
 	local title = reference.title;
@@ -5950,6 +5950,17 @@ function app:GetDataCache()
 			-- Future Unobtainable
 			app.CreateDynamicHeader("rwp", {
 				dynamic_withsubgroups = true,
+				dynamic_value = app.GameBuildVersion,
+				dynamic_searchcriteria = {
+					SearchValueCriteria = {
+						-- only include 'rwp' search results where the value is >= the current game version
+						function(o,field,value)
+							local rwp = o[field]
+							if not rwp then return end
+							return rwp >= value
+						end
+					}
+				},
 				name = L.FUTURE_UNOBTAINABLE,
 				description = L.FUTURE_UNOBTAINABLE_TOOLTIP,
 				icon = app.asset("Interface_Future_Unobtainable")
@@ -6103,6 +6114,7 @@ function app:GetDataCache()
 	-- app.PrintMemoryUsage()
 
 	-- Function to build a hidden window's data
+	local AllHiddenWindows = {}
 	local function BuildHiddenWindowData(name, icon, description, category, flags)
 		if not app.Categories[category] then return end
 
@@ -6116,6 +6128,7 @@ function app:GetDataCache()
 		end
 
 		CacheFields(windowData, true)
+		AllHiddenWindows[#AllHiddenWindows + 1] = windowData
 
 		-- Filter for Never Implemented things
 		if category == "NeverImplemented" then
@@ -6135,6 +6148,32 @@ function app:GetDataCache()
 	BuildHiddenWindowData(L.HIDDEN_CURRENCY_TRIGGERS, "Interface_Vendor", L.HIDDEN_CURRENCY_TRIGGERS_DESC, "HiddenCurrencyTriggers", { _hqt = true, _nosearch = true, Color = app.Colors.ChatLinkHQT })
 	BuildHiddenWindowData(L.HIDDEN_QUEST_TRIGGERS, "Interface_Quest", L.HIDDEN_QUEST_TRIGGERS_DESC, "HiddenQuestTriggers", { _hqt = true, _nosearch = true, Color = app.Colors.ChatLinkHQT })
 	BuildHiddenWindowData(L.SOURCELESS, "WindowIcon_Unsorted", L.SOURCELESS_DESC, "Sourceless", { _missing = true, _unsorted = true, _nosearch = true, Color = app.Colors.TooltipWarning })
+
+	-- a single Unsorted window to collect all base Unsorted windows
+	-- TODO: migrate this logic once Window creation is revised
+	app.ChatCommands.Add("all-hidden", function(args)
+		local window = app:GetWindow("all-hidden")
+		if window and not window.HasPendingUpdate then window:Toggle() return true end
+
+		-- local allHiddenSearch = app:BuildTargettedSearchResponse(AllUnsortedGroups, "_nosearch", true, nil, {ParentInclusionCriteria={},SearchCriteria={},SearchValueCriteria={}})
+
+		local windowData = app.CreateRawText(Colorize("All-Hidden", app.Colors.ChatLinkError), {
+			-- clone all unhidden groups into this window
+			g = CreateObject(AllHiddenWindows),
+			title = "All-Hidden" .. DESCRIPTION_SEPARATOR .. app.Version,
+			icon = app.asset("status-unobtainable"),
+			description = "All Hidden ATT Content",
+			font = "GameFontNormalLarge",
+			AdHoc = true
+		})
+		window:SetData(windowData)
+		window:BuildData()
+		window:Toggle()
+		return true
+	end, {
+		"Usage : /att all-hidden",
+		"Provides a single command to open all Hidden content in a single window",
+	})
 
 	-- StartCoroutine("VerifyRecursionUnsorted", function() app.VerifyCache(); end, 5);
 	-- app.PrintDebug("Finished loading data cache")
@@ -6173,7 +6212,96 @@ local MainRoot
 local ClonedHierarchyGroups = {};
 local ClonedHierarachyMapping = {};
 local SearchGroups = {};
-local KeepFields = {}
+local DropFields = {}
+-- A set of Criteria functions which must all be valid for each search result to be included in the response
+local __SearchCriteria = {
+	-- Include only non-sourceIgnored groups
+	function(o) return not o.sourceIgnored end,
+	-- Include unavailable Recipes or any content which is not a Recipe or meets the BoE filter
+	function(o) return IncludeUnavailableRecipes or not o.spellID or IgnoreBoEFilter(o) end,
+}
+local SearchCriteria = {}
+-- A set of Criteria functions which must all be valid for each search result to be included in the response
+local __SearchValueCriteria = {
+	-- Include if the field of the group matches the desired value, or via translated requireSkill value matches
+	function(o, field, value)
+		local v = o[field]
+		return v == value
+			or (field == "requireSkill" and v and app.SkillDB.SpellToSkill[app.SpecializationSpellIDs[v] or 0] == value)
+	end
+}
+local SearchValueCriteria = {}
+-- A set of Criteria functions which must all be valid for each search result to be included in the response
+local __ParentInclusionCriteria = {
+	-- Exclude heirarchical parents which don't exist, or specify '_nosearch' or are 'sourceIgnored'
+	function(parent)
+		-- check the parent to see if this parent chain will be excluded
+		if not parent then
+			-- app.PrintDebug("Don't capture non-parented",group.text)
+			return
+		end
+		if parent.sourceIgnored then
+			-- app.PrintDebug("Don't capture SourceIgnored",group.text)
+			return
+		end
+		if GetRelativeValue(parent, "_nosearch") then
+			-- app.PrintDebug("Don't capture _nosearch",group.text)
+			return
+		end
+		return true
+	end
+}
+local ParentInclusionCriteria = {}
+local function ResetCriterias(criteria)
+	wipe(SearchCriteria)
+	wipe(SearchValueCriteria)
+	wipe(ParentInclusionCriteria)
+	if criteria and criteria.SearchCriteria then
+		for _,f in ipairs(criteria.SearchCriteria) do
+			SearchCriteria[#SearchCriteria + 1] = f
+		end
+	else
+		for _,f in ipairs(__SearchCriteria) do
+			SearchCriteria[#SearchCriteria + 1] = f
+		end
+	end
+	if criteria and criteria.SearchValueCriteria then
+		for _,f in ipairs(criteria.SearchValueCriteria) do
+			SearchValueCriteria[#SearchValueCriteria + 1] = f
+		end
+	else
+		for _,f in ipairs(__SearchValueCriteria) do
+			SearchValueCriteria[#SearchValueCriteria + 1] = f
+		end
+	end
+	if criteria and criteria.ParentInclusionCriteria then
+		for _,f in ipairs(criteria.ParentInclusionCriteria) do
+			ParentInclusionCriteria[#ParentInclusionCriteria + 1] = f
+		end
+	else
+		for _,f in ipairs(__ParentInclusionCriteria) do
+			ParentInclusionCriteria[#ParentInclusionCriteria + 1] = f
+		end
+	end
+end
+local function Eval_SearchCriteria(o)
+	for i=1,#SearchCriteria do
+		if not SearchCriteria[i](o) then return end
+	end
+	return true
+end
+local function Eval_SearchValueCriteria(o, field, value)
+	for i=1,#SearchValueCriteria do
+		if not SearchValueCriteria[i](o, field, value) then return end
+	end
+	return true
+end
+local function Eval_ParentInclusionCriteria(o)
+	for i=1,#ParentInclusionCriteria do
+		if not ParentInclusionCriteria[i](o) then return end
+	end
+	return true
+end
 -- Wraps a given object such that it can act as an unfiltered Header of the base group
 local CreateWrapFilterHeader = app.CreateVisualHeaderWithGroups
 local function CloneGroupIntoHeirarchy(group)
@@ -6190,14 +6318,7 @@ local function MatchOrCloneParentInHierarchy(group)
 
 		-- check the parent to see if this parent chain will be excluded
 		local parent = group.parent;
-		if not parent or GetRelativeValue(parent, "_nosearch") then
-			-- app.PrintDebug("Don't capture Unsorted",group.text)
-			return;
-		end
-		if parent.sourceIgnored then
-			-- app.PrintDebug("Don't capture SourceIgnored",group.text)
-			return;
-		end
+		if not Eval_ParentInclusionCriteria(parent) then return end
 
 		-- is this a top-level group?
 		if parent == MainRoot then
@@ -6223,15 +6344,14 @@ local function BuildClonedHierarchy(sources)
 	local parent, thing;
 	-- for each source of each Thing with the value
 	for _,source in ipairs(sources) do
-		-- some recipes are faction locked and cannot be learned by the current character, so don't include them if specified
-		if IncludeUnavailableRecipes or not source.spellID or IgnoreBoEFilter(source) then
+		if Eval_SearchCriteria(source) then
 			-- find/clone the expected parent group in hierachy
 			parent = MatchOrCloneParentInHierarchy(source.parent);
 			if parent then
 				-- clone the Thing into the cloned parent
-				thing = not KeepFields.g and CreateObject(source, true) or CreateObject(source);
+				thing = DropFields.g and CreateObject(source, true) or CreateObject(source);
 				-- don't copy in any extra data for the thing which can pull things into groups, or reference other groups
-				if not KeepFields.sym then thing.sym = nil; end
+				if DropFields.sym then thing.sym = nil; end
 				thing.sourceParent = nil;
 				-- need to map the cloned Thing also since it may end up being a parent of another Thing
 				ClonedHierarachyMapping[source] = thing;
@@ -6244,12 +6364,10 @@ end
 local function AddSearchGroupsByField(groups, field)
 	if groups then
 		for _,group in ipairs(groups) do
-			if not group.sourceIgnored then
-				if group[field] then
-					tinsert(SearchGroups, group);
-				else
-					AddSearchGroupsByField(group.g, field);
-				end
+			if group[field] ~= nil then
+				tinsert(SearchGroups, group);
+			else
+				AddSearchGroupsByField(group.g, field);
 			end
 		end
 	end
@@ -6257,22 +6375,18 @@ end
 -- Recursively collects all groups which have the specified field=value
 local function AddSearchGroupsByFieldValue(groups, field, value)
 	if groups then
-		local v;
 		for _,group in ipairs(groups) do
-			if not group.sourceIgnored then
-				v = group[field];
-				if v == value or (field == "requireSkill" and v and app.SkillDB.SpellToSkill[app.SpecializationSpellIDs[v] or 0] == value) then
-					tinsert(SearchGroups, group);
-				else
-					AddSearchGroupsByFieldValue(group.g, field, value);
-				end
+			if Eval_SearchValueCriteria(group, field, value) then
+				tinsert(SearchGroups, group);
+			else
+				AddSearchGroupsByFieldValue(group.g, field, value);
 			end
 		end
 	end
 end
 -- Builds ClonedHierarchyGroups from the cached container using groups which match a particular key and value
 local function BuildSearchResponseViaCacheContainer(cacheContainer, value)
-	-- app.PrintDebug("BSR:Cached",value,clear)
+	-- app.PrintDebug("BSR:Cached",value)
 	if cacheContainer then
 		if value then
 			local sources = cacheContainer[value];
@@ -6287,42 +6401,57 @@ local function BuildSearchResponseViaCacheContainer(cacheContainer, value)
 end
 -- Collects a cloned hierarchy of groups which have the field and/or value within the given field. Specify 'clear' if found groups which match
 -- should additionally clear their contents when being cloned
-function app:BuildSearchResponse(field, value, clear, keep)
-	MainRoot = app:GetDataCache();
-	if MainRoot then
-		-- make sure each set of search results goes into a new container
-		-- otherwise two searches within the same window will replace the first set
-		ClonedHierarchyGroups = {}
-		wipe(ClonedHierarachyMapping);
-		wipe(SearchGroups);
-		wipe(KeepFields)
-		KeepFields.g = not clear
-		if keep then
-			for k,v in pairs(keep) do
-				KeepFields[k] = v
-			end
+function app:BuildSearchResponse(field, value, drop, criteria)
+	return app:BuildTargettedSearchResponse(app:GetDataCache(), field, value, drop, criteria)
+end
+-- Collects a cloned hierarchy of groups within the given target 'groups' which have the field and/or value within the given field. Specify 'clear' if found groups which match
+-- should additionally clear their contents when being cloned
+function app:BuildTargettedSearchResponse(groups, field, value, drop, criteria)
+	if not groups then return end
+	if groups.g then groups = groups.g end
+	if #groups == 0 then app.PrintDebug("BuildTargettedSearchResponse.FAIL - No groups available") return end
+	MainRoot = app:GetDataCache()
+	if not MainRoot then app.PrintDebug("BuildTargettedSearchResponse.FAIL - No MainRoot available") return end
+	-- make sure each set of search results goes into a new container
+	-- otherwise two searches within the same window will replace the first set
+	ClonedHierarchyGroups = {}
+	wipe(ClonedHierarachyMapping);
+	wipe(SearchGroups);
+	wipe(DropFields)
+	-- by default always drop 'sym' from results
+	DropFields.sym = true
+	if drop then
+		for k,v in pairs(drop) do
+			DropFields[k] = v
 		end
-
-		-- app.PrintDebug("BSR:",field,value,clear)
-		SetRescursiveFilters();
-		local cacheContainer = app.GetRawFieldContainer(field);
-		if cacheContainer then
-			BuildSearchResponseViaCacheContainer(cacheContainer, value);
-		elseif value ~= nil then
-			-- allow searching specifically for a nil field
-			if value == app.SearchNil then
-				value = nil;
-			end
-			-- app.PrintDebug("BSR:FieldValue",MainRoot.g and #MainRoot.g,field,value,clear)
-			AddSearchGroupsByFieldValue(MainRoot.g, field, value);
-			BuildClonedHierarchy(SearchGroups);
-		else
-			-- app.PrintDebug("BSR:Field",MainRoot.g and #MainRoot.g,field,clear)
-			AddSearchGroupsByField(MainRoot.g, field);
-			BuildClonedHierarchy(SearchGroups);
-		end
-		return ClonedHierarchyGroups;
 	end
+
+	SetRescursiveFilters();
+	-- add custom Criterias from external param
+	ResetCriterias(criteria)
+	-- app.PrintDebug("BSR:",field,value)
+	-- app.PrintTable(DropFields)
+	-- app.PrintTable(criteria)
+	-- app.PrintTable(SearchCriteria)
+	-- app.PrintTable(SearchValueCriteria)
+	-- can only do cache searches if there isn't custom criteria provided
+	local cacheContainer = not criteria and app.GetRawFieldContainer(field);
+	if cacheContainer then
+		BuildSearchResponseViaCacheContainer(cacheContainer, value);
+	elseif value ~= nil then
+		-- allow searching specifically for a nil field
+		if value == app.SearchNil then
+			value = nil;
+		end
+		-- app.PrintDebug("BSR:FieldValue",#groups,field,value)
+		AddSearchGroupsByFieldValue(groups, field, value);
+		BuildClonedHierarchy(SearchGroups);
+	else
+		-- app.PrintDebug("BSR:Field",#groups,field)
+		AddSearchGroupsByField(groups, field);
+		BuildClonedHierarchy(SearchGroups);
+	end
+	return ClonedHierarchyGroups;
 end
 end -- Search Response Logic
 
@@ -7291,7 +7420,7 @@ customWindowUpdates.ItemFilter = function(self, force)
 			function self:Search(field, value)
 				value = value or true
 				-- app.PrintDebug("Search",field,value)
-				local results = app:BuildSearchResponse(field, value, true);
+				local results = app:BuildSearchResponse(field, value, {g=true});
 				-- app.PrintDebug("Results",#results)
 				ArrayAppend(self.data.g, results);
 				self.data.text = L.ITEM_FILTER_TEXT..("  [%s=%s]"):format(field,tostring(value));
@@ -8724,7 +8853,12 @@ customWindowUpdates.list = function(self, force, got)
 			-- can only determine a sourceID if there is an itemID/sourceID on the group
 			if not data.itemID and not data.sourceID then return true end
 			if not data._VerifyGroupSourceID then data._VerifyGroupSourceID = 0 end
-			if data._VerifyGroupSourceID > 5 then return true end
+			if data._VerifyGroupSourceID > 5 then
+				-- app.PrintDebug("Cannot Harvest: No Item Info",
+				-- 	app:SearchLink(SearchForObject("itemID",data.modItemID,"field") or SearchForObject("sourceID",data.sourceID,"field")),
+				-- 	data._VerifyGroupSourceID)
+				return true
+			end
 			data._VerifyGroupSourceID = data._VerifyGroupSourceID + 1
 			local link, source = data.link or data.silentLink, data.sourceID;
 			if not link then return; end
@@ -8734,7 +8868,7 @@ customWindowUpdates.list = function(self, force, got)
 			end
 			-- If it doesn't, the source ID will need to be harvested.
 			local sourceID = app.GetSourceID(link);
-			-- app.PrintDebug("SourceIDs",data.modItemID,source,sourceID,success,link,app.GetSourceID(link))
+			-- app.PrintDebug("SourceIDs",data.modItemID,source,app.GetSourceID(link),link)
 			if sourceID and sourceID > 0 then
 				-- only save the source if it is different than what we already have, or being forced
 				if not source or source < 1 or source ~= sourceID then
@@ -8856,7 +8990,7 @@ customWindowUpdates.list = function(self, force, got)
 						added[cacheID] = true;
 						-- app.PrintDebug("CacheID",cacheID,"from cache",id,"@",index,#groups)
 						-- app.PrintDebug(o.modItemID,o[dataType],o[cacheKeyID])
-					-- else app.PrintDebug("Ignored Data for Harvest due to Matching CacheID",cacheID,app:SearchLink(o))
+					-- else app.PrintDebug("Ignored Data for Harvest due to CacheID Bounds",cacheID,app:SearchLink(o))
 					end
 				end
 			end
@@ -10900,6 +11034,10 @@ app.Startup = function()
 	-- Cache the Localized Category Data
 	AllTheThingsAD.LocalizedCategoryNames = setmetatable(AllTheThingsAD.LocalizedCategoryNames or {}, { __index = app.CategoryNames });
 	app.CategoryNames = nil;
+
+	-- Clear some keys which got added and shouldn't have been
+	AllTheThingsAD.ExplorationDB = nil
+	AllTheThingsAD.ExplorationAreaPositionDB = nil
 
 	-- Character Data Storage
 	local characterData = LocalizeGlobalIfAllowed("ATTCharacterData", true);

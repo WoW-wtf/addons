@@ -19,6 +19,16 @@ L["Hidden"] = "Hidden"
 L["Only tradable"] = "Only tradable"
 L["Only usable"] = "Only usable"
 L["Passenger"] = "Passenger"
+L["PET_ASSIGNMENT_TITLE"] = "Assign Pet to Mount"
+L["PET_ASSIGNMENT_NONE"] = "No Pet"
+L["PET_ASSIGNMENT_TOOLTIP_CURRENT"] = "Current assigned Pet:"
+L["PET_ASSIGNMENT_TOOLTIP_LEFT"] = "|cffeda55fLeft click|r to open pet assignment."
+L["PET_ASSIGNMENT_TOOLTIP_RIGHT"] = "|cffeda55fRight click|r to assign active pet to mount."
+L["PET_ASSIGNMENT_INFO"] = "You can assign a pet to this mount. It's going to be summoned as well, when you mount up.|n|n"
+        .. "All assignments are shared with all your characters.|n|n"
+        .. "You can use right-click on a pet entry to summon it manually.|n|n"
+        .. "Please be aware that most ground pets won't fly with you and just disappear when you take off. Also, flying pets are usually slower than you. So they might need some time to catch up to you.|n|n"
+        .. "Auto summoning pets is only active in world content."
 L["ROTATE_DOWN"] = "Rotate Down"
 L["ROTATE_UP"] = "Rotate Up"
 L["Reset filters"] = "Reset filters"
@@ -270,6 +280,7 @@ L["SETTING_SEARCH_FAMILY_NAME"] = "Search also by family name"
 L["SETTING_SEARCH_NOTES"] = "Search also in own notes"
 L["SETTING_SHOW_RESIZE_EDGE"] = "Activate edge in bottom corner to resize window"
 L["SETTING_SHOW_DATA"] = "Show mount data in display"
+L["SETTING_SUMMONPREVIOUSPET"] = "Summon previous active pet again when dismounting."
 L["SETTING_TRACK_USAGE"] = "Track mount usage behavior on all characters"
 L["SETTING_YCAMERA"] = "Unlock Y rotation with mouse in display"
 
@@ -307,6 +318,12 @@ L["LINK_WOWHEAD"] = "Link zu Wowhead"
 L["Mite"] = "Milbe"
 L["Only tradable"] = "Nur handelbare"
 L["Passenger"] = "Passagier"
+L["PET_ASSIGNMENT_INFO"] = "Hiermit kannst du ein Haustier diesem Reittier zuweisen. Dieses wird beim Aufsitzen ebenfalls beschworen.|n|nAlle Zuweisungen zählen übergreifend für all deine Charaktere.|n|nDu kannst mittels Rechtsklick auf einen Eintrag das Haustier direkt beschwören.|n|nBitte bedenke, dass viele Haustiere am Boden bleiben und nicht mit dir mitfliegen. Außerdem sind fliegende Haustiere auch langsamer als du. Sie brauchen dann nur ein wenig um dich einzuholen.|n|nDie automatische Haustierbeschwörung ist nur in der offenen Welt aktiv."
+L["PET_ASSIGNMENT_NONE"] = "Kein Haustier"
+L["PET_ASSIGNMENT_TITLE"] = "Haus- zu Reittier zuweisen"
+L["PET_ASSIGNMENT_TOOLTIP_CURRENT"] = "Zugewiesenes Haustier:"
+L["PET_ASSIGNMENT_TOOLTIP_LEFT"] = "|cffeda55fLinksklick|r um Haustierauswahl zu öffnen."
+L["PET_ASSIGNMENT_TOOLTIP_RIGHT"] = "|cffeda55fRechtsklick|r um aktives Haustier mit Reittier zu verknüpfen."
 L["Reset filters"] = "Filter zurücksetzen"
 L["ROTATE_DOWN"] = "Abwärtsdrehung"
 L["ROTATE_UP"] = "Aufwärtsdrehung"
@@ -361,6 +378,7 @@ L["SETTING_SEARCH_MORE"] = "Suche auch im Beschreibungstext"
 L["SETTING_SEARCH_NOTES"] = "Suche auch in eigenen Notizen"
 L["SETTING_SHOW_DATA"] = "Zeige Informationen in Modellanzeige"
 L["SETTING_SHOW_RESIZE_EDGE"] = "Zeige untere Ecke um die Fenstergröße zu ändern"
+L["SETTING_SUMMONPREVIOUSPET"] = "Zuvor aktives Haustier wird beim Absteigen wieder ausgepackt."
 L["SETTING_TRACK_USAGE"] = "Verfolge Reittier Nutzungsverhalten bei allen Charakteren"
 L["SETTING_YCAMERA"] = "Aktiviere Y-Rotation via Maus in Modellanzeige"
 
@@ -582,6 +600,12 @@ L["LINK_WOWHEAD"] = "Enlace a Wowhead"
 L["Mite"] = "Ácaros"
 L["Only tradable"] = "Sólo comerciable"
 L["Passenger"] = "Pasajeros"
+L["PET_ASSIGNMENT_INFO"] = "Puedes seleccionar una mascota a esta montura. También será invocada cuando montes.|n|nTodas las selecciones se comparten con todos tus personajes.|n|nPuedes hacer click derecho en la entrada de una mascota para invocarla manualmente.|n|nPor favor, ten en cuenta que la mayoría de las mascotas terrestres no volarán contigo y simplemente desaparecerán cuando te eleves. Además, las mascotas voladoras suelen ser más lentas que tú. Por lo tanto, es posible que necesiten algo de tiempo para alcanzarte.|n|nLa invocación automática de mascotas solo está activa en el contenido del mundo."
+L["PET_ASSIGNMENT_NONE"] = "Sin mascota"
+L["PET_ASSIGNMENT_TITLE"] = "Seleccionar mascota para la montura"
+L["PET_ASSIGNMENT_TOOLTIP_CURRENT"] = "Mascota seleccionada actualmente:"
+L["PET_ASSIGNMENT_TOOLTIP_LEFT"] = "|cffeda55fClick izquierdo|r para abrir el seleccionador de mascota."
+L["PET_ASSIGNMENT_TOOLTIP_RIGHT"] = "|cffeda55fClick derecho|r para seleccionar la mascota activa a la montura."
 L["Reset filters"] = "Restablecer los filtros"
 L["ROTATE_DOWN"] = "Girar hacia abajo"
 L["ROTATE_UP"] = "Girar hacia arriba"
@@ -636,6 +660,7 @@ L["SETTING_SEARCH_MORE"] = "Buscar también en la descripción del texto"
 L["SETTING_SEARCH_NOTES"] = "Buscar también en las notas propias"
 L["SETTING_SHOW_DATA"] = "Muestra la información de la montura en la pantalla"
 L["SETTING_SHOW_RESIZE_EDGE"] = "Activa el borde en la esquina inferior para cambiar el tamaño de la ventana"
+L["SETTING_SUMMONPREVIOUSPET"] = "Invocar de nuevo la mascota activa previamente al desmontar"
 L["SETTING_TRACK_USAGE"] = "Seguimiento del comportamiento de uso de las monturas en todos los personajes"
 L["SETTING_YCAMERA"] = "Desbloquear la rotación Y del ratón en la pantalla"
 
@@ -889,6 +914,18 @@ All current character assignments will be reset to the default profile "%s".]=]-
 --[[Translation missing --]]
 --[[ L["Passenger"] = "Passenger"--]] 
 --[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_INFO"] = "You can assign a pet to this mount. It's going to be summoned as well, when you mount up.|n|nAll assignments are shared with all your characters.|n|nYou can use right-click on a pet entry to summon it manually.|n|nPlease be aware that most ground pets won't fly with you and just disappear when you take off. Also, flying pets are usually slower than you. So they might need some time to catch up to you.|n|nAuto summoning pets is only active in world content."--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_NONE"] = "No Pet"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TITLE"] = "Assign Pet to Mount"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_CURRENT"] = "Current assigned Pet:"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_LEFT"] = "|cffeda55fLeft click|r to open pet assignment."--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_RIGHT"] = "|cffeda55fRight click|r to assign active pet to mount."--]] 
+--[[Translation missing --]]
 --[[ L["Reset filters"] = "Reset filters"--]] 
 --[[Translation missing --]]
 --[[ L["ROTATE_DOWN"] = "Rotate Down"--]] 
@@ -993,6 +1030,8 @@ All current character assignments will be reset to the default profile "%s".]=]-
 --[[ L["SETTING_SHOW_DATA"] = "Show mount data in display"--]] 
 --[[Translation missing --]]
 --[[ L["SETTING_SHOW_RESIZE_EDGE"] = "Activate edge in bottom corner to resize window"--]] 
+--[[Translation missing --]]
+--[[ L["SETTING_SUMMONPREVIOUSPET"] = "Summon previous active pet again when dismounting."--]] 
 --[[Translation missing --]]
 --[[ L["SETTING_TRACK_USAGE"] = "Track mount usage behavior on all characters"--]] 
 --[[Translation missing --]]
@@ -1405,6 +1444,18 @@ L["LINK_WOWHEAD"] = "Lien vers Wowhead"
 L["Mite"] = "Mite"
 L["Only tradable"] = "Uniquement échangeable"
 L["Passenger"] = "Passagers"
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_INFO"] = "You can assign a pet to this mount. It's going to be summoned as well, when you mount up.|n|nAll assignments are shared with all your characters.|n|nYou can use right-click on a pet entry to summon it manually.|n|nPlease be aware that most ground pets won't fly with you and just disappear when you take off. Also, flying pets are usually slower than you. So they might need some time to catch up to you.|n|nAuto summoning pets is only active in world content."--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_NONE"] = "No Pet"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TITLE"] = "Assign Pet to Mount"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_CURRENT"] = "Current assigned Pet:"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_LEFT"] = "|cffeda55fLeft click|r to open pet assignment."--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_RIGHT"] = "|cffeda55fRight click|r to assign active pet to mount."--]] 
 L["Reset filters"] = "Réinitialiser les filtres"
 L["ROTATE_DOWN"] = "Pivoter vers le bas"
 L["ROTATE_UP"] = "Pivoter vers le haut"
@@ -1460,6 +1511,8 @@ L["SETTING_SEARCH_MORE"] = "Rechercher également dans le texte de la descriptio
 L["SETTING_SEARCH_NOTES"] = "Rechercher également dans vos propres notes"
 L["SETTING_SHOW_DATA"] = "Afficher les données des montures dans le journal"
 L["SETTING_SHOW_RESIZE_EDGE"] = "Activer la marge dans le coin inférieur pour redimensionner la fenêtre"
+--[[Translation missing --]]
+--[[ L["SETTING_SUMMONPREVIOUSPET"] = "Summon previous active pet again when dismounting."--]] 
 L["SETTING_TRACK_USAGE"] = "Suivre le comportement d’utilisation des montures sur tous les personnages"
 L["SETTING_YCAMERA"] = "Débloquer la rotation sur l’axe Y avec la souris dans la fenêtre d’affichage"
 
@@ -1714,6 +1767,18 @@ All current character assignments will be reset to the default profile "%s".]=]-
 --[[Translation missing --]]
 --[[ L["Passenger"] = "Passenger"--]] 
 --[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_INFO"] = "You can assign a pet to this mount. It's going to be summoned as well, when you mount up.|n|nAll assignments are shared with all your characters.|n|nYou can use right-click on a pet entry to summon it manually.|n|nPlease be aware that most ground pets won't fly with you and just disappear when you take off. Also, flying pets are usually slower than you. So they might need some time to catch up to you.|n|nAuto summoning pets is only active in world content."--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_NONE"] = "No Pet"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TITLE"] = "Assign Pet to Mount"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_CURRENT"] = "Current assigned Pet:"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_LEFT"] = "|cffeda55fLeft click|r to open pet assignment."--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_RIGHT"] = "|cffeda55fRight click|r to assign active pet to mount."--]] 
+--[[Translation missing --]]
 --[[ L["Reset filters"] = "Reset filters"--]] 
 --[[Translation missing --]]
 --[[ L["ROTATE_DOWN"] = "Rotate Down"--]] 
@@ -1818,6 +1883,8 @@ All current character assignments will be reset to the default profile "%s".]=]-
 --[[ L["SETTING_SHOW_DATA"] = "Show mount data in display"--]] 
 --[[Translation missing --]]
 --[[ L["SETTING_SHOW_RESIZE_EDGE"] = "Activate edge in bottom corner to resize window"--]] 
+--[[Translation missing --]]
+--[[ L["SETTING_SUMMONPREVIOUSPET"] = "Summon previous active pet again when dismounting."--]] 
 --[[Translation missing --]]
 --[[ L["SETTING_TRACK_USAGE"] = "Track mount usage behavior on all characters"--]] 
 --[[Translation missing --]]
@@ -2245,6 +2312,18 @@ L["Hidden"] = "숨김"
 --[[ L["Mite"] = "Mite"--]] 
 L["Only tradable"] = "교환가능"
 L["Passenger"] = "승객"
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_INFO"] = "You can assign a pet to this mount. It's going to be summoned as well, when you mount up.|n|nAll assignments are shared with all your characters.|n|nYou can use right-click on a pet entry to summon it manually.|n|nPlease be aware that most ground pets won't fly with you and just disappear when you take off. Also, flying pets are usually slower than you. So they might need some time to catch up to you.|n|nAuto summoning pets is only active in world content."--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_NONE"] = "No Pet"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TITLE"] = "Assign Pet to Mount"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_CURRENT"] = "Current assigned Pet:"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_LEFT"] = "|cffeda55fLeft click|r to open pet assignment."--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_RIGHT"] = "|cffeda55fRight click|r to assign active pet to mount."--]] 
 L["Reset filters"] = "필터 초기화"
 L["ROTATE_DOWN"] = "아래로 회전"
 L["ROTATE_UP"] = "위로 회전"
@@ -2324,6 +2403,8 @@ L["SETTING_PREVIEW_LINK"] = "탈것 미리보기에 수집품 버튼 표시"
 --[[ L["SETTING_SHOW_DATA"] = "Show mount data in display"--]] 
 --[[Translation missing --]]
 --[[ L["SETTING_SHOW_RESIZE_EDGE"] = "Activate edge in bottom corner to resize window"--]] 
+--[[Translation missing --]]
+--[[ L["SETTING_SUMMONPREVIOUSPET"] = "Summon previous active pet again when dismounting."--]] 
 --[[Translation missing --]]
 --[[ L["SETTING_TRACK_USAGE"] = "Track mount usage behavior on all characters"--]] 
 L["SETTING_YCAMERA"] = "표시 화면에서 마우스로 Y 축 회전 잠금 해제"
@@ -2574,6 +2655,18 @@ L["Hidden"] = "Oculto"
 --[[ L["Mite"] = "Mite"--]] 
 L["Only tradable"] = "Apenas negociável"
 L["Passenger"] = "Passageiro"
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_INFO"] = "You can assign a pet to this mount. It's going to be summoned as well, when you mount up.|n|nAll assignments are shared with all your characters.|n|nYou can use right-click on a pet entry to summon it manually.|n|nPlease be aware that most ground pets won't fly with you and just disappear when you take off. Also, flying pets are usually slower than you. So they might need some time to catch up to you.|n|nAuto summoning pets is only active in world content."--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_NONE"] = "No Pet"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TITLE"] = "Assign Pet to Mount"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_CURRENT"] = "Current assigned Pet:"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_LEFT"] = "|cffeda55fLeft click|r to open pet assignment."--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_RIGHT"] = "|cffeda55fRight click|r to assign active pet to mount."--]] 
 L["Reset filters"] = "Resetar filtros "
 L["ROTATE_DOWN"] = "Girar para Baixo"
 L["ROTATE_UP"] = "Girar para Cima"
@@ -2633,6 +2726,8 @@ L["SETTING_SEARCH_NOTES"] = "Pesquisar também nas próprias notas"
 --[[Translation missing --]]
 --[[ L["SETTING_SHOW_DATA"] = "Show mount data in display"--]] 
 L["SETTING_SHOW_RESIZE_EDGE"] = "Ativar a borda no canto inferior para redimensionar a janela"
+--[[Translation missing --]]
+--[[ L["SETTING_SUMMONPREVIOUSPET"] = "Summon previous active pet again when dismounting."--]] 
 L["SETTING_TRACK_USAGE"] = "Rastreie o comportamento de uso da montaria em todos os personagens"
 L["SETTING_YCAMERA"] = "Desbloquear rotação vertical com o mouse na tela"
 
@@ -2873,6 +2968,18 @@ L["Hidden"] = "Скрытые"
 --[[ L["Mite"] = "Mite"--]] 
 L["Only tradable"] = "Только передающиеся"
 L["Passenger"] = "Пассажирские"
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_INFO"] = "You can assign a pet to this mount. It's going to be summoned as well, when you mount up.|n|nAll assignments are shared with all your characters.|n|nYou can use right-click on a pet entry to summon it manually.|n|nPlease be aware that most ground pets won't fly with you and just disappear when you take off. Also, flying pets are usually slower than you. So they might need some time to catch up to you.|n|nAuto summoning pets is only active in world content."--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_NONE"] = "No Pet"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TITLE"] = "Assign Pet to Mount"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_CURRENT"] = "Current assigned Pet:"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_LEFT"] = "|cffeda55fLeft click|r to open pet assignment."--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_RIGHT"] = "|cffeda55fRight click|r to assign active pet to mount."--]] 
 L["Reset filters"] = "Сбросить фильтры"
 L["ROTATE_DOWN"] = "Вращение вниз"
 L["ROTATE_UP"] = "Вращение вверх"
@@ -2932,6 +3039,8 @@ L["SETTING_SEARCH_NOTES"] = "Искать также в собственных �
 --[[Translation missing --]]
 --[[ L["SETTING_SHOW_DATA"] = "Show mount data in display"--]] 
 L["SETTING_SHOW_RESIZE_EDGE"] = "Активация края в нижнем углу, чтобы изменять размер окна"
+--[[Translation missing --]]
+--[[ L["SETTING_SUMMONPREVIOUSPET"] = "Summon previous active pet again when dismounting."--]] 
 L["SETTING_TRACK_USAGE"] = "Отслеживание использования транспорта для всех персонажей"
 L["SETTING_YCAMERA"] = "Разблокировать вертикальное вращение транспорта с помощью мыши"
 
@@ -3164,6 +3273,18 @@ L["LINK_WOWHEAD"] = "Wowhead 链接"
 L["Mite"] = "螨"
 L["Only tradable"] = "仅可交易"
 L["Passenger"] = "载客"
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_INFO"] = "You can assign a pet to this mount. It's going to be summoned as well, when you mount up.|n|nAll assignments are shared with all your characters.|n|nYou can use right-click on a pet entry to summon it manually.|n|nPlease be aware that most ground pets won't fly with you and just disappear when you take off. Also, flying pets are usually slower than you. So they might need some time to catch up to you.|n|nAuto summoning pets is only active in world content."--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_NONE"] = "No Pet"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TITLE"] = "Assign Pet to Mount"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_CURRENT"] = "Current assigned Pet:"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_LEFT"] = "|cffeda55fLeft click|r to open pet assignment."--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_RIGHT"] = "|cffeda55fRight click|r to assign active pet to mount."--]] 
 L["Reset filters"] = "重置过滤器"
 L["ROTATE_DOWN"] = "向下旋转"
 L["ROTATE_UP"] = "向上旋转"
@@ -3218,6 +3339,8 @@ L["SETTING_SEARCH_MORE"] = "也同时在描述文本中搜索"
 L["SETTING_SEARCH_NOTES"] = "也同时在自己的笔记中搜索"
 L["SETTING_SHOW_DATA"] = "在屏幕上显示坐骑数据"
 L["SETTING_SHOW_RESIZE_EDGE"] = "激活底角边缘以调整窗口尺寸"
+--[[Translation missing --]]
+--[[ L["SETTING_SUMMONPREVIOUSPET"] = "Summon previous active pet again when dismounting."--]] 
 L["SETTING_TRACK_USAGE"] = "跟踪所有角色的坐骑使用行为"
 L["SETTING_YCAMERA"] = "展示窗解锁鼠标Y轴旋转"
 
@@ -3471,6 +3594,18 @@ All current character assignments will be reset to the default profile "%s".]=]-
 --[[Translation missing --]]
 --[[ L["Passenger"] = "Passenger"--]] 
 --[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_INFO"] = "You can assign a pet to this mount. It's going to be summoned as well, when you mount up.|n|nAll assignments are shared with all your characters.|n|nYou can use right-click on a pet entry to summon it manually.|n|nPlease be aware that most ground pets won't fly with you and just disappear when you take off. Also, flying pets are usually slower than you. So they might need some time to catch up to you.|n|nAuto summoning pets is only active in world content."--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_NONE"] = "No Pet"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TITLE"] = "Assign Pet to Mount"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_CURRENT"] = "Current assigned Pet:"--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_LEFT"] = "|cffeda55fLeft click|r to open pet assignment."--]] 
+--[[Translation missing --]]
+--[[ L["PET_ASSIGNMENT_TOOLTIP_RIGHT"] = "|cffeda55fRight click|r to assign active pet to mount."--]] 
+--[[Translation missing --]]
 --[[ L["Reset filters"] = "Reset filters"--]] 
 --[[Translation missing --]]
 --[[ L["ROTATE_DOWN"] = "Rotate Down"--]] 
@@ -3575,6 +3710,8 @@ All current character assignments will be reset to the default profile "%s".]=]-
 --[[ L["SETTING_SHOW_DATA"] = "Show mount data in display"--]] 
 --[[Translation missing --]]
 --[[ L["SETTING_SHOW_RESIZE_EDGE"] = "Activate edge in bottom corner to resize window"--]] 
+--[[Translation missing --]]
+--[[ L["SETTING_SUMMONPREVIOUSPET"] = "Summon previous active pet again when dismounting."--]] 
 --[[Translation missing --]]
 --[[ L["SETTING_TRACK_USAGE"] = "Track mount usage behavior on all characters"--]] 
 --[[Translation missing --]]

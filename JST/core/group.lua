@@ -7,7 +7,7 @@ local UnitFrames = {}
 local newest = G.Version
 local last_scan = 0
 
-local LS = LibStub:GetLibrary("LibSpecialization")
+local LS = LibStub:GetLibrary("LibSpecializationEdit")
 local LGF = LibStub("LibGetFrame-1.0")
 
 --====================================================--
@@ -103,6 +103,16 @@ local IterateGroupMembers = function(reversed, forceParty)
 end
 T.IterateGroupMembers = IterateGroupMembers
 
+-- 队伍在战斗中
+local IsGroupInCombat = function()
+	for unit in IterateGroupMembers() do
+		if UnitAffectingCombat(unit) then
+			return true
+		end
+	end
+end
+T.IsGroupInCombat = IsGroupInCombat
+
 -- 获取玩家昵称或名字
 local GetNameByGUID = function(GUID)
 	local use_nickname
@@ -144,8 +154,10 @@ T.GetGroupInfobyName = GetGroupInfobyName
 
 -- 生成染色的队友昵称
 local ColorNickNameByGUID = function(GUID)
-	local unit = GroupInfo[GUID].unit
-	return ColorNameText(GetNameByGUID(GUID), unit)
+	local unit = GUID and GroupInfo[GUID] and GroupInfo[GUID].unit
+	if unit then
+		return ColorNameText(GetNameByGUID(GUID), unit)
+	end
 end
 T.ColorNickNameByGUID = ColorNickNameByGUID
 
@@ -164,7 +176,7 @@ T.ColorNickNameByName = ColorNickNameByName
 local GetNameByName= function(name)
 	local info = GetGroupInfobyName(name)
 	if info then
-		if JST_CDB["GeneralOption"]["name_format"] == "nickname" and info.nicknames[1] then
+		if JST_CDB["GeneralOption"]["name_format"] == "nickname" and info.nicknames and info.nicknames[1] then
 			return info.nicknames[1]
 		else
 			return info.real_name
@@ -237,7 +249,7 @@ local function CreateRefreshButton(frame)
 
 		C_Timer.After(2, function()
 			local info = GetGroupInfobyGUID(GUID)
-			frame.str2:SetText(info.ilvl)
+			frame.str2:SetText(string.format("%.1f", info.ilvl))
 			frame.str4:SetText(FormatNickNames(GUID))
 			frame.str5:SetText(FormatVersionText(info.ver))
 			self:Enable()
@@ -434,11 +446,21 @@ local function UpdateMyInfo()
 	UpdateNickNameByPlayerGUID(G.PlayerGUID, JST_CDB["GeneralOption"]["mynickname"])
 end
 
+local function UpdateNameByGUID(GUID)
+	local unit = GUID and GroupInfo[GUID] and GroupInfo[GUID].unit
+	if unit then
+		local name, realm = UnitNameUnmodified(unit)
+		realm = realm or GetRealmName()
+		
+		GroupInfo[GUID].real_name = name
+		GroupInfo[GUID].full_name = string.format("%s-%s", name, realm)
+		GroupInfo[GUID].format_name = ColorNickNameByGUID(GUID)
+	end
+end
+
 local function ScanUnit(unit)
 	local GUID = UnitGUID(unit)
-	local name, realm = UnitFullName(unit)
-	realm = realm or GetRealmName()
-	
+
 	if not GroupInfo[GUID] then
 		GroupInfo[GUID] = {}
 	end
@@ -457,9 +479,8 @@ local function ScanUnit(unit)
 	
 	GroupInfo[GUID].GUID = GUID
 	GroupInfo[GUID].unit = unit	
-	GroupInfo[GUID].real_name = name
-	GroupInfo[GUID].full_name = string.format("%s-%s", name, realm)
-	GroupInfo[GUID].format_name = ColorNickNameByGUID(GUID)
+	
+	UpdateNameByGUID(GUID)
 	
 	if GUID == G.PlayerGUID then
 		UpdateMyInfo()
@@ -470,7 +491,7 @@ local function ScanUnit(unit)
 		UnitFrames[unit] = true
 	end
 	
-	UpdateRaidInfoLineByPlayerGUID(GUID)
+	UpdateRaidInfoLineByPlayerGUID(GUID)	
 end
 
 local function RemovePlayer(GUID)
@@ -514,6 +535,10 @@ eventframe:SetScript("OnEvent", function(self, event, ...)
 		SendMyInfo()
 	elseif event == "PLAYER_LOGIN" or event == "GROUP_ROSTER_UPDATE" then
 		ScanGroupMembers()
+	elseif event == "UNIT_NAME_UPDATE" then
+		local unit = ...
+		local GUID = unit and UnitGUID(unit)
+		UpdateNameByGUID(GUID)
 	elseif event == "ADDON_MSG" then
 		--if InCombatLockdown() then return end
 		local channel, sender, mark = ...
@@ -537,29 +562,20 @@ local update_events = {
 	["GROUP_FORMED"] = true,
 	["PLAYER_LOGIN"] = true,
 	["GROUP_ROSTER_UPDATE"] = true,
+	["UNIT_NAME_UPDATE"] = true,
 	["ADDON_MSG"] = true,
 }
 
 T.RegisterEventAndCallbacks(eventframe, update_events)
 
-local function GroupSpecUpdate(specId, role, position, name)
-	--print(string.format("%s [%d] %s %s", real_name, specId, role, position))
-	local full_name
-	if string.find("-", name) then
-		full_name = name
-	else
-		full_name = string.format("%s-%s", name, GetRealmName())
-	end
-	for GUID, info in pairs(GroupInfo) do
-		if info.full_name == full_name then
-			info.role = role
-			info.spec_id = specId
-			info.spec_icon = select(4, GetSpecializationInfoByID(specId))
-			info.pos = position
-			
-			UpdateRaidInfoLineByPlayerGUID(GUID)
-			break
-		end
+local function GroupSpecUpdate(specId, role, position, GUID)
+	if GroupInfo[GUID] then
+		GroupInfo[GUID].role = role
+		GroupInfo[GUID].spec_id = specId
+		GroupInfo[GUID].spec_icon = select(4, GetSpecializationInfoByID(specId))
+		GroupInfo[GUID].pos = position
+		
+		UpdateRaidInfoLineByPlayerGUID(GUID)
 	end
 end
 

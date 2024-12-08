@@ -185,7 +185,6 @@ local Update_default_Settings = function()
 							}
 							if alert_type == "PlateInterrupt" then
 								Character_alert_Settings[category][alert_type][args.spellID].interrupt_sl = args.interrupt
-								Character_alert_Settings[category][alert_type][args.spellID].auto_assign_bool = args.auto_assign
 							end
 						end
 					elseif category == "Sound" then

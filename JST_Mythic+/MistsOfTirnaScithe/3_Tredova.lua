@@ -37,6 +37,17 @@ G.Encounters[2405] = {
 				{322450, "6"},
 			},
 			options = {
+				{ -- 血量
+					category = "TextAlert", 
+					type = "hp",
+					data = {
+						npc_id = "164517",
+						ranges = {
+							{ ul = 75, ll = 71, tip = L["阶段转换"]..string.format(L["血量2"], 70)},
+							{ ul = 45, ll = 41, tip = L["阶段转换"]..string.format(L["血量2"], 40)},
+						},
+					},
+				},
 				{ -- 吸收盾 暴食护盾
 					category = "BossMod",
 					spellID = 322527,

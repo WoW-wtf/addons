@@ -650,8 +650,8 @@ end
 --------------------[[     CMD     ]]---------------------
 ----------------------------------------------------------
 SLASH_JST1 = "/jst"
-SlashCmdList["JST"] = function(arg)
-	local arg = string.lower(arg)
+SlashCmdList["JST"] = function(ARG)
+	local arg = string.lower(ARG)
 	if arg == "testhl1" then -- 测试团队框架高亮
 		T.GlowRaidFramebyUnit_Show("pixel", "pixel_test", "player", {0, 1, 0}, 5)
 	elseif arg == "testhl2" then -- 测试团队框架高亮
@@ -684,7 +684,7 @@ SlashCmdList["JST"] = function(arg)
 			T.addon_msg("RemoveMe"..index..","..G.PlayerGUID, "GROUP")
 		end
 	elseif string.find(arg, "spell") then -- 法术请求
-		local arg1, arg2 = string.split(" ", arg)
+		local arg1, arg2 = string.split(" ", ARG)
 		if not (arg1 and arg2) then
 			T.msg(L["法术请求格式错误"])
 			return

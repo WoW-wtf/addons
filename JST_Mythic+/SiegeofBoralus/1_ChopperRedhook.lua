@@ -22,12 +22,36 @@ G.Encounters[2132] = {
 				{257459, "5"},
 			},
 			options = {
+				{ -- 文字 上钩了 倒计时
+					category = "TextAlert",
+					type = "spell",
+					color = {1, 0, 0},
+					preview = L["锁定"]..L["倒计时"],
+					data = {
+						spellID = 257459,
+						events =  {
+							["UNIT_SPELLCAST_START"] = true,
+							["ENCOUNTER_PHASE"] = true,
+						},					
+						info = {							
+							["all"] = {
+								[1] = {1, 31, 21, 24, 33, 19},
+							},
+						},
+						cd_args = {
+							round = true,
+						},
+					},
+					update = function(self, event, ...)
+						T.UpdateCooldownTimer("UNIT_SPELLCAST_START", "boss1", 257459, L["锁定"], self, event, ...)
+					end,
+				},
 				{ -- 上钩了
 					category = "AlertIcon",
 					type = "com",
 					spellID = 257459,
 					hl = "yel_flash",
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 				{ -- 团队框架图标 上钩了
 					category = "RFIcon",
@@ -81,6 +105,26 @@ G.Encounters[2132] = {
 				{257585},
 			},
 			options = {
+				{ -- 文字 重型军火 倒计时
+					category = "TextAlert",
+					type = "spell",
+					color = {.67, .92, .08},
+					preview = L["炸弹"]..L["倒计时"],
+					data = {
+						spellID = 273721,
+						events =  {
+							["UNIT_SPELLCAST_SUCCEEDED"] = true,
+						},
+					},
+					update = function(self, event, ...)
+						if event == "UNIT_SPELLCAST_SUCCEEDED" then
+							local unit, _, spellID = ...
+							if spellID == 257540 then
+								T.Start_Text_DelayTimer(self, 52.5, L["炸弹"])
+							end
+						end
+					end,
+				},
 				{ -- 计时条 重型军火
 					category = "AlertTimerbar",
 					type = "cleu",
@@ -139,7 +183,7 @@ G.Encounters[2132] = {
 		},
 		{ -- 铁潮斩杀者
 			npcs = {
-				{17725, "0"},
+				{30441, "0"},
 			},
 			options = {
 				{ -- 计时条 沉重挥砍
@@ -149,6 +193,18 @@ G.Encounters[2132] = {
 					color = {.69, .73, .73},
 					text = L["头前"],
 					sound = "[avoidfront]cast",
+				},
+			},
+		},
+		{ -- 铁潮斩杀者
+			npcs = {
+				{30443},
+			},
+			options = {
+				{ -- 团队框架图标 炽热弹头
+					category = "RFIcon",
+					type = "Cast",
+					spellID = 257641,
 				},
 			},
 		},		

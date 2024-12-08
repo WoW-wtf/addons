@@ -140,7 +140,7 @@ G.Encounters[2594] = {
 					spellID = 434829,
 					color = {.44, .56, .93},
 					ficon = "5,2",
-					sound = "[aoe]cast",
+					sound = "[aoe]channel,cd3",
 				},
 				{ -- 图标 残存影响
 					category = "AlertIcon",

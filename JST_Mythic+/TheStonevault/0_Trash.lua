@@ -28,6 +28,8 @@ G.Encounters["1269Trash"] = {
 					type = "cast",
 					spellID = 425974,
 					color = {.9, .64, .35},
+					sound = "[aoe]cast",
+					glow = true,
 				},
 				{ -- 计时条 地震波
 					category = "AlertTimerbar",
@@ -95,8 +97,9 @@ G.Encounters["1269Trash"] = {
 					type = "cast",
 					spellID = 426771,
 					color = {.1, .7, 1},
+					dur = 6,
 					glow = true,
-					sound = "[denfense]cast",
+					sound = "[aoe]cast",
 				},
 			},
 		},
@@ -135,11 +138,21 @@ G.Encounters["1269Trash"] = {
 				{449154},
 			},
 			options = {
+				{ -- 计时条 熔岩迫击炮
+					category = "AlertTimerbar",
+					type = "cast",
+					spellID = 449154,
+					color = {.91, .49, .03},
+					text = L["大球"],
+					sound = "[ball]cast",
+					glow = true,
+				},
 				{ -- 对我施法图标 熔岩迫击炮
 					category = "AlertIcon",
 					type = "com",
 					spellID = 449154,
 					hl = "yel_flash",
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"}
 				},
 				{ -- 团队框架图标 熔岩迫击炮
 					category = "RFIcon",
@@ -163,12 +176,15 @@ G.Encounters["1269Trash"] = {
 				{449130},
 			},
 			options = {
-				{ -- 对我施法图标 熔岩重炮
-					category = "AlertIcon",
-					type = "com",
-					spellID = 449130,
-					hl = "yel_flash",
-				},
+				{ -- 计时条 熔岩重炮
+					category = "AlertTimerbar",
+					type = "cast",
+					spellID = 429114,
+					spellIDs = {[449130] = true},
+					color = {.78, .09, .09},
+					glow = true,
+					sound = "[orb]cast",
+				},			
 				{ -- 图标 熔岩重炮
 					category = "AlertIcon",
 					type = "aura",

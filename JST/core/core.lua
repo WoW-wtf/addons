@@ -873,6 +873,7 @@ T.CreateCom = function(ENCID, option_page, category, args)
 		details.sound_bool = true
 		table.insert(detail_options, {key = "sound_bool", text = L["音效"], default = true, sound = args.sound})
 	end
+	
 	if args.msg then
 		details.msg_bool = true
 		table.insert(detail_options, {key = "msg_bool", text = L["喊话"]..GetMsgInfo(args.msg, args.spellID), default = true})
@@ -939,14 +940,14 @@ T.CreateCom = function(ENCID, option_page, category, args)
 							
 							s.remain_second = ceil(s.remain)
 							if args.sound and s.voi_countdown then -- 声音
-								if s.remain_second == s.voi_countdown then
+								if s.remain_second <= s.voi_countdown then
 									T.PlaySound("count\\"..s.remain_second)
 									s.voi_countdown = s.voi_countdown - 1
 								end
 							end
 							
 							if args.msg and s.msg_countdown then -- 聊天讯息 倒数
-								if s.remain_second == s.msg_countdown then
+								if s.remain_second <= s.msg_countdown then
 									if args.msg.str_cd then
 										T.SendAuraMsg(args.msg.str_cd, args.msg.channel, name, count, s.remain_second)
 									end
@@ -2853,6 +2854,7 @@ local InterruptAssignment = {} -- 已经分配打断的怪
 local InterruptDataAuto = {} -- 当前打断轮次（自动）
 
 G.Npc = Npc
+G.AutoAssignNpc = AutoAssignNpc
 G.Hidden_Interrupt_Npcs = Hidden_Interrupt_Npcs
 G.PlateIconHolders = PlateIconHolders
 
@@ -3103,16 +3105,31 @@ local function UpdateRaidTarget(unitFrame)
 	if not unitFrame or not unitFrame.unit then return end
 	local frame = unitFrame.icon_bg
 	local unit = unitFrame.unit
-	local index = GetRaidTargetIndex(unit) or 0
+	local index = GetRaidTargetIndex(unit)
 	if frame.spellicon then
-		SetRaidTargetIconTexture(frame.spellicon.raid_mark_icon, index)	
+		if index then
+			SetRaidTargetIconTexture(frame.spellicon.raid_mark_icon, index)
+			frame.spellicon.raid_mark_icon:Show()
+		else
+			frame.spellicon.raid_mark_icon:Hide()
+		end
 	end
 	if frame.interrupticon then
-		SetRaidTargetIconTexture(frame.interrupticon.raid_mark_icon, index)
+		if index then
+			SetRaidTargetIconTexture(frame.interrupticon.raid_mark_icon, index)
+			frame.interrupticon.raid_mark_icon:Show()
+		else
+			frame.interrupticon.raid_mark_icon:Hide()
+		end
 		T.UpdateInterruptSpells(unitFrame, "INIT", unit, UnitGUID(unit))
 	end
 	if frame.interrupticon_auto then
-		SetRaidTargetIconTexture(frame.interrupticon_auto.raid_mark_icon, index)
+		if index then
+			SetRaidTargetIconTexture(frame.interrupticon_auto.raid_mark_icon, index)
+			frame.interrupticon_auto.raid_mark_icon:Show()
+		else
+			frame.interrupticon_auto.raid_mark_icon:Hide()
+		end
 	end
 end
 
@@ -4083,18 +4100,19 @@ local function QueueAssignInterrupt(GUID, spellCDs)
 end
 
 local function AssignInterruptPlayers(GUID)
-	if InterruptQueue[GUID] then
+	if GUID and InterruptQueue[GUID] then
 		T.test_msg("分配", T.GetFomattedNameFromNpcID(select(6, strsplit("-", GUID))), InterruptQueue[GUID])
+		
 		if not InterruptAssignment[GUID] then
 			InterruptAssignment[GUID] = {}
 		end
 		
-		while InterruptQueue[GUID] > 0 do
-			local GUID, format_name, spellID, cd = GetNextPlayerAvailable(GUID)
-			if not GUID then return end
-			
-			table.insert(InterruptAssignment[GUID], {GUID = GUID, format_name = format_name, spellID = spellID, cd = cd})		
+		local PlayerGUID, format_name, spellID, cd = GetNextPlayerAvailable(GUID)
+		while InterruptQueue[GUID] > 0 and PlayerGUID and format_name and spellID and cd do			
+			table.insert(InterruptAssignment[GUID], {GUID = PlayerGUID, format_name = format_name, spellID = spellID, cd = cd})
+
 			InterruptQueue[GUID] = InterruptQueue[GUID] - 1/cd
+			
 			T.test_msg("分配打断人员", format_name, InterruptQueue[GUID])
 			
 			local unit = UnitTokenFromGUID(GUID)
@@ -4105,6 +4123,8 @@ local function AssignInterruptPlayers(GUID)
 					UpdateInterruptAssignment(unitFrame, "INIT", unit, GUID)
 				end
 			end
+			
+			PlayerGUID, format_name, spellID, cd = GetNextPlayerAvailable(GUID)
 		end
 		
 		if InterruptQueue[GUID] <= 0 then
@@ -4180,14 +4200,16 @@ local function NamePlates_OnEvent(self, event, ...)
 				table.remove(InterruptPlayers, i)
 			end
 		end
-	elseif event == "UNIT_COMBAT" then
+	elseif event == "UNIT_THREAT_LIST_UPDATE" then
 		local unit = ...
-		local GUID = UnitGUID(unit)
-		if unit and GUID then
-			local npcID = select(6, string.split("-", GUID))
-			if AutoAssignNpc[npcID] and not (InterruptQueue[GUID] or InterruptAssignment[GUID]) then
-				QueueAssignInterrupt(GUID, AutoAssignNpc[npcID])
-				AssignInterruptPlayers(GUID)			
+		if unit and string.find(unit, "nameplate") then
+			local GUID = UnitGUID(unit)
+			local npcID = GUID and select(6, string.split("-", GUID))
+			if npcID and AutoAssignNpc[npcID] and UnitDetailedThreatSituation("player", unit) then							
+				if not (InterruptQueue[GUID] or InterruptAssignment[GUID]) then
+					QueueAssignInterrupt(GUID, AutoAssignNpc[npcID])
+					AssignInterruptPlayers(GUID)
+				end
 			end
 		end
 	elseif event == "VARIABLES_LOADED" then -- 刷新所有姓名板状态
@@ -4304,6 +4326,17 @@ local function NamePlates_OnEvent(self, event, ...)
 				end
 			end
 		end
+	elseif event == "PLAYER_REGEN_ENABLED" then
+		if not T.IsGroupInCombat() then
+			for _, info in pairs(InterruptAssignment) do
+				for i, v in pairs(info) do
+					CancelAssignment(v.GUID)
+				end
+			end
+			InterruptQueue = table.wipe(InterruptQueue)
+			InterruptAssignment = table.wipe(InterruptAssignment)
+			InterruptDataAuto = table.wipe(InterruptDataAuto)
+		end
 	elseif event == "ENCOUNTER_START" then -- 获取MRT打断讯息 格式：#打断xx-npcID-轮次-{rt1} (名字) (名字 名字)
 		InterruptMrtData = table.wipe(InterruptMrtData)
 		
@@ -4358,7 +4391,7 @@ local function NamePlates_OnEvent(self, event, ...)
 end
 
 local plate_events = {
-	["UNIT_COMBAT"] = true,
+	["UNIT_THREAT_LIST_UPDATE"] = true,
 	["UNIT_FLAGS"] = true,
 	["VARIABLES_LOADED"] = true,
 	["NAME_PLATE_CREATED"] = true,
@@ -4370,6 +4403,7 @@ local plate_events = {
 	["RAID_TARGET_UPDATE"] = true,	
 	["ADDON_MSG"] = true,
 	["GROUP_ROSTER_UPDATE"] = true,
+	["PLAYER_REGEN_ENABLED"] = true,
 }
 
 NamePlateAlertTrigger:SetScript("OnEvent", NamePlates_OnEvent)
@@ -4397,13 +4431,12 @@ T.CreatePlateAlert = function(ENCID, option_page, category, args)
 	end
 	
 	local path = {category, args.type, frame_key}
-	
 	local details = {}
 	local detail_options = {}
 	
 	if args.type == "PlateInterrupt" then
 		details.interrupt_sl = args.interrupt
-		table.insert(detail_options, {key = "interrupt_sl", text = L["无MRT设置的循环次数"], default = args.interrupt, min = 2, max = 5, apply = function(value, alert, button)		
+		table.insert(detail_options, {key = "interrupt_sl", text = L["无MRT设置的循环次数"], default = args.interrupt, min = 2, max = 5, apply = function(value, alert, button)
 			local enable = T.ValueFromPath(JST_CDB, path)["enable"]
 			local npcIDs = {string.split(",", args.mobID)}
 			for i, npcID in pairs(npcIDs) do
@@ -4415,18 +4448,24 @@ T.CreatePlateAlert = function(ENCID, option_page, category, args)
 			end
 		end})
 		table.insert(detail_options, {key = "copy_interrupt_btn", text = L["粘贴MRT模板"], mobID = args.mobID, spellID = args.spellID})
-	elseif args.type == "PlateInterruptAuto" then
-		local npcIDs = {string.split(",", args.mobID)}
-		for i, npcID in pairs(npcIDs) do
-			if not AutoAssignNpc[npcID] then
-				AutoAssignNpc[npcID] = {}
-			end
-			table.insert(AutoAssignNpc[npcID], args.spellCD)
-		end
 	end
 	
 	T.InitSettings(path, args.enable_tag, args.ficon, details)
 	T.Create_PlateAlert_Options(option_page, category, path, args, detail_options)
+	
+	if args.type == "PlateInterruptAuto" then
+		local enable = T.ValueFromPath(JST_CDB, path)["enable"]
+		local npcID = args.mobID
+		if enable then
+			if not AutoAssignNpc[npcID] then
+				AutoAssignNpc[npcID] = {}
+			end
+			AutoAssignNpc[npcID] = table.wipe(AutoAssignNpc[npcID])
+			table.insert(AutoAssignNpc[npcID], args.spellCD)
+		else
+			AutoAssignNpc[npcID] = nil
+		end
+	end
 	
 	if not PlateAlertFrames[args.type] then
 		PlateAlertFrames[args.type] = {}

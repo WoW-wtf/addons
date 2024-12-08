@@ -14,6 +14,7 @@ StaticPopupDialogs["MJE_EDIT_FAVORITE_PROFILE"] = {
                 ["autoFavor"] = false,
                 ["mounts"] = {}
             })
+            ADDON.Api:SwitchFavoriteProfile(#ADDON.settings.favorites.profiles)
         elseif profileIndex > 1 then
             ADDON.settings.favorites.profiles[profileIndex].name = text
             ADDON.Events:TriggerEvent("OnFavoriteProfileChanged")
@@ -42,11 +43,12 @@ StaticPopupDialogs["MJE_CONFIRM_DELETE_FAVORITE_PROFILE"] = {
 
 function ADDON.UI:BuildFavoriteProfileMenu(root, withEditOptions)
     local sortedIndex = {}
+    local tInsert = table.insert
 
     local profiles = ADDON.settings.favorites.profiles
     for index, profileData in pairs(profiles) do
         if profileData then
-            table.insert(sortedIndex, index)
+            tInsert(sortedIndex, index)
         end
     end
     table.sort(sortedIndex, function(a, b)
@@ -87,7 +89,13 @@ local function CreateFavoritesMenu(_, root)
     root:SetScrollMode(GetScreenHeight() - 100)
 
     root:CreateButton(ADDON.L.FAVOR_DISPLAYED, function()
-        ADDON.Api:SetBulkIsFavorites(ADDON.Api:GetDataProvider():GetCollection())
+        local list = {}
+        local tInsert = table.insert
+        ADDON.Api:GetDataProvider():ForEach(function(data)
+            tInsert(list, data.mountID)
+        end)
+
+        ADDON.Api:SetBulkIsFavorites(list, true)
     end)
     root:CreateButton(UNCHECK_ALL, function()
         ADDON.Api:SetBulkIsFavorites({})

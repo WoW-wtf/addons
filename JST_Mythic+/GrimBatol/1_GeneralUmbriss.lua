@@ -12,7 +12,6 @@ end
 -- engage_id = 1810, -- 测试用
 -- npc_id = {"91784"}, -- 测试用
 
-
 G.Encounters[2617] = {
 	engage_id = 1051,
 	npc_id = {"39625"},

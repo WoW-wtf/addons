@@ -1,3 +1,4 @@
+local L = LibStub("AceLocale-3.0"):GetLocale("AutoPotion")
 local addonName, ham = ...
 local isRetail = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE)
 local isClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
@@ -22,11 +23,11 @@ local lastStaticElement = nil
 
 function ham.settingsFrame:updateConfig(option, value)
 	if ham.options[option] ~= nil then
-        ham.options[option] = value  -- Update in-memory
-        HAMDB[option] = value        -- Persist to DB
-    else
-        print("Invalid option: " .. tostring(option))
-    end
+		ham.options[option] = value -- Update in-memory
+		HAMDB[option] = value       -- Persist to DB
+	else
+		print(L["Invalid option: "] .. tostring(option))
+	end
 	-- Rebuild the macro and update priority frame
 	ham.checkTinker()
 	ham.updateHeals()
@@ -39,7 +40,7 @@ function ham.settingsFrame:OnEvent(event, addOnName)
 		if event == "ADDON_LOADED" then
 			HAMDB = HAMDB or CopyTable(ham.defaults)
 			if HAMDB.activatedSpells == nil then
-				print("The Settings of AutoPotion were reset due to breaking changes.")
+				print(L["The Settings of AutoPotion were reset due to breaking changes."])
 				HAMDB = CopyTable(ham.defaults)
 			end
 			self:InitializeOptions()
@@ -67,7 +68,7 @@ function ham.settingsFrame:createPrioFrame(id, iconTexture, positionx, isSpell, 
 		if isSpell == true then
 			GameTooltip:SetSpellByID(id)
 		elseif isTinker then
-            GameTooltip:SetInventoryItem("player", id)
+			GameTooltip:SetInventoryItem("player", id)
 		else
 			GameTooltip:SetItemByID(id)
 		end
@@ -140,7 +141,6 @@ function ham.settingsFrame:updatePrio()
 	-- Add items to priority frames
 	if next(ham.itemIdList) ~= nil then
 		for i, id in ipairs(ham.itemIdList) do
-
 			local entry
 			local iconTexture
 			local isTinker = false
@@ -149,9 +149,9 @@ function ham.settingsFrame:updatePrio()
 			if type(id) == "string" and id:match("^slot:") then
 				local slot = assert(tonumber(id:sub(6)), "Invalid slot number")
 				entry = GetInventoryItemID("player", slot)
-        		iconTexture = GetInventoryItemTexture("player", slot)
+				iconTexture = GetInventoryItemTexture("player", slot)
 				isTinker = true
-			-- otherwise its a normal item id
+				-- otherwise its a normal item id
 			else
 				local _, _, _, _, _, _, _, _, _, tmpTexture = C_Item.GetItemInfo(id)
 				entry = id
@@ -190,19 +190,18 @@ function ham.settingsFrame:updatePrio()
 end
 
 function ham.settingsFrame:InitializeOptions()
-
 	-- Create the main panel inside the Interface Options container
 	self.panel = CreateFrame("Frame", addonName, InterfaceOptionsFramePanelContainer)
 	self.panel.name = addonName
 
 	-- Register with Interface Options
-    if InterfaceOptions_AddCategory then
-        InterfaceOptions_AddCategory(self.panel)
-    else
-        local category = Settings.RegisterCanvasLayoutCategory(self.panel, addonName)
-        Settings.RegisterAddOnCategory(category)
-        self.panel.categoryID = category:GetID() -- for OpenToCategory use
-    end
+	if InterfaceOptions_AddCategory then
+		InterfaceOptions_AddCategory(self.panel)
+	else
+		local category = Settings.RegisterCanvasLayoutCategory(self.panel, addonName)
+		Settings.RegisterAddOnCategory(category)
+		self.panel.categoryID = category:GetID() -- for OpenToCategory use
+	end
 
 	-- inset frame to provide some padding
 	self.content = CreateFrame("Frame", nil, self.panel)
@@ -210,32 +209,32 @@ function ham.settingsFrame:InitializeOptions()
 	self.content:SetPoint("BOTTOMRIGHT", self.panel, "BOTTOMRIGHT", -16, 16)
 
 	-- title
-    local title = self.content:CreateFontString(nil, "ARTWORK", "GameFontNormalHuge")
-    title:SetPoint("TOP", 0, 0)
-    title:SetText("Auto Potion Settings")
+	local title = self.content:CreateFontString(nil, "ARTWORK", "GameFontNormalHuge")
+	title:SetPoint("TOP", 0, 0)
+	title:SetText(L["Auto Potion Settings"])
 
-    -- subtitle
-    local subtitle = self.content:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    subtitle:SetPoint("TOPLEFT", 0, -40)
-    subtitle:SetText("Configure the behavior of the addon. IE: if you want to include class spells")
+	-- subtitle
+	local subtitle = self.content:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+	subtitle:SetPoint("TOPLEFT", 0, -40)
+	subtitle:SetText(L["Configure the behavior of the addon. IE: if you want to include class spells"])
 
-    -- behavior title
-    local behaviourTitle = self.content:CreateFontString(nil, "ARTWORK", "GameFontNormalHuge")
-    behaviourTitle:SetPoint("TOPLEFT", subtitle, "BOTTOMLEFT", 0, -30)
-    behaviourTitle:SetText("Addon Behaviour")
+	-- behavior title
+	local behaviourTitle = self.content:CreateFontString(nil, "ARTWORK", "GameFontNormalHuge")
+	behaviourTitle:SetPoint("TOPLEFT", subtitle, "BOTTOMLEFT", 0, -30)
+	behaviourTitle:SetText(L["Addon Behaviour"])
 
 	-------------  Stop Casting  -------------	
 	local stopCastButton = CreateFrame("CheckButton", nil, self.content, "InterfaceOptionsCheckButtonTemplate")
 	stopCastButton:SetPoint("TOPLEFT", behaviourTitle, 0, -PADDING)
 	---@diagnostic disable-next-line: undefined-field
-	stopCastButton.Text:SetText("Include /stopcasting in the macro")
+	stopCastButton.Text:SetText(L["Include /stopcasting in the macro"])
 	stopCastButton:HookScript("OnClick", function(_, btn, down)
 		ham.settingsFrame:updateConfig("stopCast", stopCastButton:GetChecked())
 	end)
 	stopCastButton:HookScript("OnEnter", function(_, btn, down)
 		---@diagnostic disable-next-line: param-type-mismatch
 		GameTooltip:SetOwner(stopCastButton, "ANCHOR_TOPRIGHT")
-		GameTooltip:SetText("Useful for casters.")
+		GameTooltip:SetText(L["Useful for casters."])
 		GameTooltip:Show()
 	end)
 	stopCastButton:HookScript("OnLeave", function(_, btn, down)
@@ -248,7 +247,7 @@ function ham.settingsFrame:InitializeOptions()
 	local cdResetButton = CreateFrame("CheckButton", nil, self.content, "InterfaceOptionsCheckButtonTemplate")
 	cdResetButton:SetPoint("TOPLEFT", lastStaticElement, 0, -PADDING)
 	---@diagnostic disable-next-line: undefined-field
-	cdResetButton.Text:SetText("Includes the shortest Cooldown in the reset Condition of Castsequence. !!USE CAREFULLY!!")
+	cdResetButton.Text:SetText(L["Includes the shortest Cooldown in the reset Condition of Castsequence. !!USE CAREFULLY!!"])
 	cdResetButton:HookScript("OnClick", function(_, btn, down)
 		ham.settingsFrame:updateConfig("cdReset", cdResetButton:GetChecked())
 	end)
@@ -259,14 +258,14 @@ function ham.settingsFrame:InitializeOptions()
 	local raidStoneButton = CreateFrame("CheckButton", nil, self.content, "InterfaceOptionsCheckButtonTemplate")
 	raidStoneButton:SetPoint("TOPLEFT", lastStaticElement, 0, -PADDING)
 	---@diagnostic disable-next-line: undefined-field
-	raidStoneButton.Text:SetText("Low Priority Healthstones")
+	raidStoneButton.Text:SetText(L["Low Priority Healthstones"])
 	raidStoneButton:HookScript("OnClick", function(_, btn, down)
 		ham.settingsFrame:updateConfig("raidStone", raidStoneButton:GetChecked())
 	end)
 	raidStoneButton:HookScript("OnEnter", function(_, btn, down)
 		---@diagnostic disable-next-line: param-type-mismatch
 		GameTooltip:SetOwner(raidStoneButton, "ANCHOR_TOPRIGHT")
-		GameTooltip:SetText("Prioritize health potions over a healthstone.")
+		GameTooltip:SetText(L["Prioritize health potions over a healthstone."])
 		GameTooltip:Show()
 	end)
 	raidStoneButton:HookScript("OnLeave", function(_, btn, down)
@@ -284,13 +283,13 @@ function ham.settingsFrame:InitializeOptions()
 	if isRetail then
 		local itemsTitle = self.content:CreateFontString("ARTWORK", nil, "GameFontNormalHuge")
 		itemsTitle:SetPoint("TOPLEFT", lastStaticElement, 0, -PADDING_CATERGORY)
-		itemsTitle:SetText("Items")
+		itemsTitle:SetText(L["Items"])
 
 		---Withering Potion---
 		witheringPotionButton = CreateFrame("CheckButton", nil, self.content, "InterfaceOptionsCheckButtonTemplate")
 		witheringPotionButton:SetPoint("TOPLEFT", itemsTitle, 0, -PADDING)
 		---@diagnostic disable-next-line: undefined-field
-		witheringPotionButton.Text:SetText("Potion of Withering Vitality")
+		witheringPotionButton.Text:SetText(L["Potion of Withering Vitality"])
 		witheringPotionButton:HookScript("OnClick", function(_, btn, down)
 			ham.settingsFrame:updateConfig("witheringPotion", witheringPotionButton:GetChecked())
 		end)
@@ -309,7 +308,7 @@ function ham.settingsFrame:InitializeOptions()
 		witheringDreamsPotionButton = CreateFrame("CheckButton", nil, self.content, "InterfaceOptionsCheckButtonTemplate")
 		witheringDreamsPotionButton:SetPoint("TOPLEFT", itemsTitle, 220, -PADDING)
 		---@diagnostic disable-next-line: undefined-field
-		witheringDreamsPotionButton.Text:SetText("Potion of Withering Dreams")
+		witheringDreamsPotionButton.Text:SetText(L["Potion of Withering Dreams"])
 		witheringDreamsPotionButton:HookScript("OnClick", function(_, btn, down)
 			ham.settingsFrame:updateConfig("witheringDreamsPotion", witheringDreamsPotionButton:GetChecked())
 		end)
@@ -328,7 +327,7 @@ function ham.settingsFrame:InitializeOptions()
 		cavedwellerDelightButton = CreateFrame("CheckButton", nil, self.content, "InterfaceOptionsCheckButtonTemplate")
 		cavedwellerDelightButton:SetPoint("TOPLEFT", itemsTitle, 440, -PADDING)
 		---@diagnostic disable-next-line: undefined-field
-		cavedwellerDelightButton.Text:SetText("Cavedweller's Delight")
+		cavedwellerDelightButton.Text:SetText(L["Cavedweller's Delight"])
 		cavedwellerDelightButton:HookScript("OnClick", function(_, btn, down)
 			ham.settingsFrame:updateConfig("cavedwellerDelight", cavedwellerDelightButton:GetChecked())
 		end)
@@ -347,7 +346,7 @@ function ham.settingsFrame:InitializeOptions()
 		heartseekingButton = CreateFrame("CheckButton", nil, self.content, "InterfaceOptionsCheckButtonTemplate")
 		heartseekingButton:SetPoint("TOPLEFT", itemsTitle, 0, -60)
 		---@diagnostic disable-next-line: undefined-field
-		heartseekingButton.Text:SetText("Heartseeking Health Injector (tinker)")
+		heartseekingButton.Text:SetText(L["Heartseeking Health Injector (tinker)"])
 		heartseekingButton:HookScript("OnClick", function(_, btn, down)
 			ham.settingsFrame:updateConfig("heartseekingInjector", heartseekingButton:GetChecked())
 		end)
@@ -371,13 +370,13 @@ function ham.settingsFrame:InitializeOptions()
 	-------------  CURRENT PRIORITY  -------------
 	currentPrioTitle = self.content:CreateFontString("ARTWORK", nil, "GameFontNormalHuge")
 	currentPrioTitle:SetPoint("BOTTOMLEFT", 0, PADDING_PRIO_CATEGORY)
-	currentPrioTitle:SetText("Current Priority")
+	currentPrioTitle:SetText(L["Current Priority"])
 
 
 	-------------  RESET BUTTON  -------------
 	local btn = CreateFrame("Button", nil, self.content, "UIPanelButtonTemplate")
 	btn:SetPoint("BOTTOMLEFT", 2, 3)
-	btn:SetText("Reset to Default")
+	btn:SetText(L["Reset to Default"])
 	btn:SetWidth(120)
 	btn:SetScript("OnClick", function()
 		HAMDB = CopyTable(ham.defaults)
@@ -399,7 +398,7 @@ function ham.settingsFrame:InitializeOptions()
 		ham.updateHeals()
 		ham.updateMacro()
 		self:updatePrio()
-		print("Reset successful!")
+		print(L["Reset successful!"])
 	end)
 end
 
@@ -407,7 +406,7 @@ function ham.settingsFrame:InitializeClassSpells(relativeTo)
 	-------------  CLASS / RACIALS  -------------
 	local myClassTitle = self.content:CreateFontString("ARTWORK", nil, "GameFontNormalHuge")
 	myClassTitle:SetPoint("TOPLEFT", relativeTo, 0, -PADDING_CATERGORY)
-	myClassTitle:SetText("Class/Racial Spells")
+	myClassTitle:SetText(L["Class/Racial Spells"])
 
 	local lastbutton = nil
 	local posy = -PADDING
@@ -464,19 +463,19 @@ SLASH_HAM3 = "/ap"
 SLASH_HAM4 = "/autopotion"
 
 SlashCmdList.HAM = function(msg, editBox)
-    -- Check if the message contains "debug"
-    if msg and msg:trim():lower() == "debug" then
-        ham.debug = not ham.debug
+	-- Check if the message contains "debug"
+	if msg and msg:trim():lower() == "debug" then
+		ham.debug = not ham.debug
 		ham.checkTinker()
-        print("|cffb48ef9AutoPotion:|r Debug mode is now " .. (ham.debug and "enabled" or "disabled"))
-        return
-    end
+		print("|cffb48ef9AutoPotion:|r Debug mode is now " .. (ham.debug and "enabled" or "disabled"))
+		return
+	end
 
-    -- Open settings if no "debug" keyword was passed
-    if InterfaceOptions_AddCategory then
-        InterfaceOptionsFrame_OpenToCategory(addonName)
-    else
-        local settingsCategoryID = _G[addonName].categoryID
-        Settings.OpenToCategory(settingsCategoryID)
-    end
+	-- Open settings if no "debug" keyword was passed
+	if InterfaceOptions_AddCategory then
+		InterfaceOptionsFrame_OpenToCategory(addonName)
+	else
+		local settingsCategoryID = _G[addonName].categoryID
+		Settings.OpenToCategory(settingsCategoryID)
+	end
 end

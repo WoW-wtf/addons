@@ -1290,8 +1290,7 @@ G.Encounters[2608] = {
 					init = function(frame)
 						frame.aura_id = 438708
 						frame.element_type = "bar"
-						frame.color = {1, 1, 0}
-						frame.role = true
+						frame.color = {1, .3, 0}
 						frame.raid_index = true
 						frame.healers = {}
 						frame.debuffed_list = {}
@@ -1302,13 +1301,6 @@ G.Encounters[2608] = {
 							[15] = 3, -- H
 							[16] = 5, -- M
 							[17] = 2, -- 随机
-						}
-						
-						frame.pos_info = {
-						    ["MELEE"] = 3,
-							["RANGED"] = 2,
-							["HEALER"] = 1,
-							["TANK"] = 0,
 						}
 						
 						frame.jump_dur = {11.7, 11.6, 6.5, 8.7}
@@ -1391,13 +1383,11 @@ G.Encounters[2608] = {
 							local info = T.GetGroupInfobyGUID(GUID)
 							if info then
 								local color_pro = (AuraUtil.FindAuraBySpellID(455849, info.unit, "HARMFUL") and 2) or (AuraUtil.FindAuraBySpellID(455850, info.unit, "HARMFUL") and 1) or 0
-								local pos_pro = info.pos and self.pos_info[info.pos] or 0
 								local index_pro = UnitInRaid(info.unit)
 								
 								table.insert(self.priority, {
 									GUID = GUID,
 									color_pro = color_pro,
-									pos_pro = pos_pro,
 									index_pro = index_pro,
 								})
 								
@@ -1409,9 +1399,7 @@ G.Encounters[2608] = {
 							table.sort(self.priority, function(a, b)
 								if a.color_pro > b.color_pro then
 									return true
-								elseif a.color_pro == b.color_pro and a.pos_pro > b.pos_pro then
-									return true
-								elseif a.color_pro == b.color_pro and a.pos_pro == b.pos_pro and a.index_pro < b.index_pro then
+								elseif a.color_pro == b.color_pro and a.index_pro < b.index_pro then
 									return true
 								end
 							end)

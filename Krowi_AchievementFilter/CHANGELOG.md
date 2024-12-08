@@ -1,6 +1,28 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 79.0 - 2024-11-15
+### Added
+- Guild achievements tab keybind
+- WoW's 20th Anniversary achievement
+
+### Changed
+- Achievements and Categories are now moved to the new API system
+- Data loading time is reduced by 50%
+
+### Cata Classic
+- Additional (promotional) achievements marked as unobtainable
+
+## 78.0 - 2024-11-01
+### Added
+- Transmog sets for The War Within raid and season 1
+
+### Changed
+- Transmog sets are now moved to the new API system
+
+### Removed
+- Khaz Algar Lore Hunter achievement
+
 ## 77.0 - 2024-10-31
 ### Changed
 - Backend data is now prepared to be more API friendly (in case KAF support ever stops)

@@ -536,7 +536,7 @@ G.Encounters["1184Trash"] = {
 					spellID = 325413,
 					hl = "yel_flash",
 					tip = L["分散"],
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 				{ -- 团队框架图标 不稳定的酸液
 					category = "RFIcon",

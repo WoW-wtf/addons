@@ -83,7 +83,7 @@ G.Encounters[2396] = {
 					spellID = 320788,
 					hl = "yel_flash",
 					ficon = "7",
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 				{ -- 团队框架图标 冻结之缚
 					category = "RFIcon",

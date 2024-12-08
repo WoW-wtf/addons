@@ -575,6 +575,7 @@ function app:ShowPopupDialogWithMultiLineEditBox(text, onclick, label)
 		f:Show()
 	end
 	f.OnClick = onclick;
+	f:Show()
 	if text then
 		if label then
 			local l = f.Label;
@@ -584,7 +585,6 @@ function app:ShowPopupDialogWithMultiLineEditBox(text, onclick, label)
 		f.EditBox:HighlightText();
 		f.EditBox:SetFocus();
 	end
-	f:Show()
 end
 function app:ShowPopupDialogToReport(reportReason, text)
 	app:ShowPopupDialogWithMultiLineEditBox(text, nil, (reportReason or "Missing Data").."\n"..app.L.PLEASE_REPORT_MESSAGE..app.L.REPORT_TIP);

@@ -3,8 +3,8 @@ local app = select(2, ...);
 local L = app.L;
 
 -- App locals
-local AssignChildren, GetRelativeField, GetRelativeValue, SearchForField =
-	app.AssignChildren, app.GetRelativeField, app.GetRelativeValue, app.SearchForField;
+local AssignChildren, GetRelativeField, GetRelativeValue, SearchForField, GetRelativeByFunc =
+	app.AssignChildren, app.GetRelativeField, app.GetRelativeValue, app.SearchForField, app.GetRelativeByFunc;
 local IsRetrieving = app.Modules.RetrievingData.IsRetrieving;
 local Colorize = app.Modules.Color.Colorize;
 local Search = app.SearchForObject
@@ -740,6 +740,9 @@ PrintQuestInfo = function(questID, new)
 		app.print("Quest", questChange, app:Linkify(text .. " (Not in ATT " .. app.Version .. ")", app.Colors.ChatLinkError, "dialog:" .. popupID), GetQuestFrequency(questID) or "");
 	end
 end
+local function NotInGame(ref)
+	return not app.Modules.Filter.Filters.InGame(ref)
+end
 app.CheckInaccurateQuestInfo = function(questRef, questChange, forceShow)
 	-- Checks a given quest reference against the current character info to see if something is inaccurate
 	-- accepted quests from old removed items shouldn't trigger a notification to report as inaccurate, non-removed items should still validate
@@ -753,7 +756,8 @@ app.CheckInaccurateQuestInfo = function(questRef, questChange, forceShow)
 		-- is marked as in the game
 		-- NOTE: Classic doesn't use the Filters Module yet. (TODO)
 		-- The logic is simple enough to where it shouldn't matter.
-		local inGame = app.Modules.Filter.Filters.InGame(questRef);
+		-- This now checks recursively outwards to ensure that an in-game quest isn't buried inside a removed header
+		local inGame = not GetRelativeByFunc(questRef, NotInGame)
 		-- repeatable or not previously completed or the accepted quest was immediately completed prior to the check, or character in party sync
 		local incomplete = (questRef.repeatable or not completed or LastQuestTurnedIn == completed or IsPartySyncActive);
 		-- not missing pre-requisites

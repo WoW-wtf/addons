@@ -1883,6 +1883,18 @@ T.Create_PlateAlert_Options = function(option_page, category, path, args, detail
 					G.Npc[npcID] = nil
 				end
 			end
+		elseif args.type == "PlateInterruptAuto" then
+			local enable = T.ValueFromPath(JST_CDB, path)["enable"]
+			local npcID = args.mobID	
+			if enable then
+				if not G.AutoAssignNpc[npcID] then
+					G.AutoAssignNpc[npcID] = {}
+				end
+				G.AutoAssignNpc[npcID] = table.wipe(G.AutoAssignNpc[npcID])
+				table.insert(G.AutoAssignNpc[npcID], args.spellCD)
+			else
+				G.AutoAssignNpc[npcID] = nil
+			end
 		end
 	end
 	

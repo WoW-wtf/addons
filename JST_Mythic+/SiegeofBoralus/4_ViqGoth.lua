@@ -22,6 +22,30 @@ G.Encounters[2140] = {
 				{274991, "7"},
 			},
 			options = {
+				{ -- 文字 腐败之水 倒计时
+					category = "TextAlert",
+					type = "spell",
+					color = {.38, .69, .98},
+					preview = L["DOT"]..L["倒计时"],
+					data = {
+						spellID = 274991,
+						events =  {
+							["UNIT_SPELLCAST_SUCCEEDED"] = true,
+							["ENCOUNTER_PHASE"] = true,
+						},					
+						info = {							
+							["all"] = {
+								[1] = {3, 22, 20, 20, 23, 21, 25, 20, 20, 20, 24, 23, 21, 22, 22},
+							},
+						},
+						cd_args = {
+							round = true,
+						},
+					},
+					update = function(self, event, ...)
+						T.UpdateCooldownTimer("UNIT_SPELLCAST_SUCCEEDED", "boss1", 274991, L["DOT"], self, event, ...)
+					end,
+				},
 				{ -- 图标 腐败之水
 					category = "AlertIcon",
 					type = "aura",
@@ -75,6 +99,15 @@ G.Encounters[2140] = {
 						end
 					end,
 				},
+				{ -- 计时条 深渊的呼唤
+					category = "AlertTimerbar",
+					type = "cast",
+					spellID = 270183,
+					dur = 3,
+					color = {.62, .89, .62},
+					text = L["躲地板"],
+					sound = "[mindstep]cast"
+				},
 			},
 		},
 		{ -- 攻城恐魔
@@ -87,8 +120,8 @@ G.Encounters[2140] = {
 					type = "cast",
 					spellID = 269266,
 					color = {1, .73, .29},
-					text = L["击退"].."+"..L["全团AE"],
-					sound = "[knockback]cast"
+					text = L["全团AE"],
+					sound = "[aoe]cast"
 				},
 			},
 		},

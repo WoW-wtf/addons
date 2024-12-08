@@ -75,7 +75,7 @@ G.Encounters[2572] = {
 					type = "cast",
 					spellID = 424879,
 					color = {.91, .69, .35},
-					sound = "[denfense]cast",
+					sound = "[aoe]cast",
 				},
 			
 			},
@@ -85,6 +85,14 @@ G.Encounters[2572] = {
 				{424888, "0"},
 			},
 			options = {
+				{ -- 计时条 震地猛击
+					category = "AlertTimerbar",
+					type = "cast",
+					spellID = 424888,
+					color = {1, .3, .2},
+					ficon = "2,7",
+					sound = "[prepare_dispel]cast",
+				},
 				{ -- 对我施法图标 震地猛击
 					category = "AlertIcon",
 					type = "com",

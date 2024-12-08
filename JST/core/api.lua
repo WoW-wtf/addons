@@ -1850,7 +1850,7 @@ T.InitMobHealth = function(frame)
 		if mark == 0 then
 			bar.rt_icon:Hide()
 		else
-			SetRaidTargetIconTexture(bar.rt_icon, mark) -- 0?
+			SetRaidTargetIconTexture(bar.rt_icon, mark)
 			bar.rt_icon:Show()
 		end
 	end
@@ -3004,7 +3004,7 @@ local function OnElementDisplayed(frame, self, text, i, GUID)
 		
 		-- 其他
 		if frame.post_display then
-			frame:post_display(self, i, unit_id, GUID)
+			frame:post_display(self, i, info.unit, GUID)
 		end
 	end
 end

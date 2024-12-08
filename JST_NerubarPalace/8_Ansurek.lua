@@ -17,7 +17,6 @@ if G.Client == "zhCN" or G.Client == "zhTW" then
 	L["进门左转"] = "进门→左转"
 	L["进门右转"] = "进门→右转"
 	L["进门"] = "进门"
-	L["每人只能进一次"] = "每人只能进一次"
 	L["附近"] = "附近"
 	L["捡精华"] = "捡%s的精华"
 	L["穿环"] = "穿环"
@@ -39,7 +38,6 @@ else
 	L["进门左转"] = "Enter Gate → Go LEFT"
 	L["进门右转"] = "Enter Gate → Go Right"
 	L["进门"] = "Enter Gate"
-	L["每人只能进一次"] = "Each person can only enter once"
 	L["附近"] = "nearby"
 	L["捡精华"] = "Pick up essence %s"
 	L["穿环"] = "Cross"
@@ -218,7 +216,7 @@ G.Encounters[2602] = {
 						frame.diffculty_num = {
 							[14] = 1, -- PT
 							[15] = 2, -- H
-							[16] = 4, -- M
+							[16] = 3, -- M
 						}
 						
 						frame.info = {
@@ -963,11 +961,6 @@ G.Encounters[2602] = {
 							end
 						},
 						{
-							key = "enter_only_once_bool",
-							text = L["每人只能进一次"],
-							default = true,
-						},
-						{
 							key = "mrt_custom_btn", 
 							text = L["粘贴MRT模板"],
 						},
@@ -977,7 +970,6 @@ G.Encounters[2602] = {
 						frame.assignment = {}
 						frame.gates = {}
 						frame.bars = {}
-						frame.entered = {}
 						frame.gate_num = 0
 						frame.dead_add = 0
 						
@@ -1046,6 +1038,7 @@ G.Encounters[2602] = {
 							bar.exp_time = GetTime() + 12
 							bar.unit = unit
 							bar.groupInd = groupInd
+							bar.index = index
 							
 							bar:SetScript("OnUpdate", function(s, e)
 								s.t = s.t + e
@@ -1094,7 +1087,6 @@ G.Encounters[2602] = {
 							frame.gates = table.wipe(frame.gates)							
 							frame.gate_num = 0
 							frame.dead_add = 0
-							frame.entered = table.wipe(frame.entered)
 							
 							local text = C_AddOns.IsAddOnLoaded("MRT") and _G.VExRT.Note and _G.VExRT.Note.Text1
 							
@@ -1112,12 +1104,10 @@ G.Encounters[2602] = {
 									if betweenLine then
 										count = count + 1
 										frame.assignment[count] = {}
-										local idx = 0
 										for name in line:gmatch("|c%x%x%x%x%x%x%x%x([^|]+)|") do
 											local info = T.GetGroupInfobyName(name)
 											if info then					
-												idx = idx + 1
-												frame.assignment[count][idx] = info.GUID
+												table.insert(frame.assignment[count], {GUID = info.GUID, used = false})
 											else
 												T.test_msg(string.format(L["昵称错误"], name))
 											end				
@@ -1150,14 +1140,19 @@ G.Encounters[2602] = {
 								local index, unit, target_name, target_GUID
 								
 								if frame.assignment[groupInd] then
-									for i, GUID in pairs(frame.assignment[groupInd]) do
-										local info = T.GetGroupInfobyGUID(GUID)
-										if info and (not JST_CDB["BossMod"][frame.config_id]["enter_only_once_bool"] or not frame.entered[GUID]) and not UnitIsDeadOrGhost(info.unit) then
-											index = i
-											unit = info.unit
-											target_name = info.format_name
-											target_GUID = GUID
-											break
+									for i, v in pairs(frame.assignment[groupInd]) do
+										if not v.used then
+											local info = T.GetGroupInfobyGUID(v.GUID)
+											if info and info.unit and not UnitIsDeadOrGhost(info.unit) then
+												local name, _, count, _, dur, exp_time = AuraUtil.FindAuraBySpellID(460218, info.unit, "HARMFUL")
+												if (not name) or (exp_time and exp_time - GetTime() < 10) then -- 无debuff 或 debuff时间小于10秒
+													index = i
+													unit = info.unit
+													target_name = info.format_name
+													target_GUID = v.GUID
+													break
+												end
+											end
 										end
 									end
 								end
@@ -1165,15 +1160,18 @@ G.Encounters[2602] = {
 								if index and unit and target_name and target_GUID then
 									frame:CreateNewBar(groupInd, index, unit, target_name)	
 								end
-							elseif subEvent == "SPELL_AURA_APPLIED" and spellID == 460218 then
-								frame.entered[destGUID] = true
-								
+							elseif subEvent == "SPELL_AURA_APPLIED" and spellID == 460218 then	
 								local dest_unit = UnitTokenFromGUID(destGUID)
 								
 								if dest_unit then
 									for _, bar in pairs(frame.bars) do
 										if bar:IsShown() and bar.unit and UnitIsUnit(bar.unit, dest_unit) then
 											frame.gates[sourceGUID] = bar.groupInd
+											
+											if frame.assignment[bar.groupInd] and frame.assignment[bar.groupInd][bar.index] then
+												frame.assignment[bar.groupInd][bar.index]["used"] = true
+											end
+											
 											bar:Hide()
 											bar:SetScript("OnUpdate", nil)
 											if UnitIsUnit(bar.unit, "player") then

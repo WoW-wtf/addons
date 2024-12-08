@@ -52,7 +52,6 @@ G.Encounters[2587] = {
 					spellID = 439202,
 					color = {.8, .52, .09},
 					ficon = "2,7",
-					text = L["驱散"],
 					sound = "[prepare_dispel]cast",
 				},
 				{ -- 图标 燃烧发酵

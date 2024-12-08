@@ -46,6 +46,30 @@ G.Encounters[2134] = {
 				{257882},
 			},
 			options = {
+				{ -- 文字 激流破奔 倒计时
+					category = "TextAlert",
+					type = "spell",
+					color = {.44, .96, 1},
+					preview = L["放圈"]..L["倒计时"],
+					data = {
+						spellID = 257882,
+						events =  {
+							["UNIT_SPELLCAST_START"] = true,
+							["ENCOUNTER_PHASE"] = true,
+						},					
+						info = {							
+							["all"] = {
+								[1] = {8, 30, 20, 29, 21, 29, 22, 29, 23, 32},
+							},
+						},
+						cd_args = {
+							round = true,
+						},
+					},
+					update = function(self, event, ...)
+						T.UpdateCooldownTimer("UNIT_SPELLCAST_START", "boss1", 257882, L["放圈"], self, event, ...)
+					end,
+				},
 				{ -- 计时条 激流破奔
 					category = "AlertTimerbar",
 					type = "cleu",
@@ -54,6 +78,7 @@ G.Encounters[2134] = {
 					dur = 4.6,
 					tags = {0.6},
 					color = {.44, .96, 1},
+					sound = "[mindstep]cast",
 				},
 			},
 		},

@@ -29,7 +29,7 @@ G.Encounters[2596] = {
 					spellID = 439401,
 					color = {0, .77, .99},
 					text = L["躲球"],
-					sound = "[orb]cast"
+					sound = "[orb]cast",
 				},
 			},
 		},
@@ -43,7 +43,8 @@ G.Encounters[2596] = {
 					type = "cast",
 					spellID = 439341,
 					color = {.91, .55, 1},
-					text = L["DOT"],
+					text = L["全团AE"],
+					sound = "[aoe]cast",
 				},
 				{ -- 图标 捻接
 					category = "AlertIcon",

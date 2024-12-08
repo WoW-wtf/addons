@@ -23,11 +23,36 @@ G.Encounters[2590] = {
 				{443954},
 			},
 			options = {				
+				{ -- 文字 排放口 倒计时
+					category = "TextAlert",
+					type = "spell",
+					color = {.85, .41, .07},
+					preview = T.GetIconLink(445541)..L["倒计时"],
+					data = {
+						spellID = 445541,
+						events =  {
+							["UNIT_SPELLCAST_SUCCEEDED"] = true,
+							["ENCOUNTER_PHASE"] = true,
+						},					
+						info = {							
+							["all"] = {
+								[1] = {35,27,28,24,28,24,28},
+							},
+						},
+						cd_args = {
+							round = true,
+						},
+					},
+					update = function(self, event, ...)
+						T.UpdateCooldownTimer("UNIT_SPELLCAST_SUCCEEDED", "boss2", 445541, T.GetIconLink(445541), self, event, ...)
+					end,
+				},
 				{ -- 计时条 排放口
 					category = "AlertTimerbar",
 					type = "cast",
 					spellID = 445541,
-					color = {.85, .41, .07},		
+					dur = 3,
+					color = {.85, .41, .07},	
 					text = L["全团AE"],
 					sound = "[aoe]cast",
 				},
@@ -86,6 +111,7 @@ G.Encounters[2590] = {
 					color = {.62, .65, .61},
 					ficon = "5",
 					text = L["离开中场"],
+					sound = "[nocenter]cast",
 				},
 			},
 		},
@@ -141,9 +167,11 @@ G.Encounters[2590] = {
 				{ -- 计时条 熔岩重炮
 					category = "AlertTimerbar",
 					type = "cast",
-					spellID = 449167,
+					spellID = 428120,
 					color = {.91, .49, .03},
-					sound = "[avoidfront]cast"
+					text = L["大球"],
+					sound = "[ball]cast",
+					glow = true,
 				},
 			},
 		},

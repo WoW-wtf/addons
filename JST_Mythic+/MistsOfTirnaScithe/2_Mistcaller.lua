@@ -169,7 +169,7 @@ G.Encounters[2402] = {
 					type = "com",
 					spellID = 321891,
 					hl = "yel_flash",
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 				{ -- 团队框架图标 鬼抓人锁定
 					category = "RFIcon",

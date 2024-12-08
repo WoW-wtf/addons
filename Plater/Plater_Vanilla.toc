@@ -3,9 +3,10 @@
 ## Notes: Nameplate addon designed for advanced users.
 ## SavedVariables: PlaterDB, PlaterLanguage, PlaterLogs, PlaterBackup
 ## SavedVariablesPerCharacter: PlaterDBChr
+## OptionalDeps: Masque
 ## IconTexture-blank: 982414
 ## IconTexture: Interface\AddOns\Plater\images\cast_bar
-## Version: Plater-v595-Vanilla
+## Version: Plater-v596-Vanilla
 ## X-Curse-Project-ID: 100547
 ## X-Wago-ID: kRNLep6o
 

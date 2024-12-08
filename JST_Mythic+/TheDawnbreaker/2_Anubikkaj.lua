@@ -59,7 +59,30 @@ G.Encounters[2581] = {
 					hl = "yel_flash",
 					tip = L["召唤小怪"],
 					sound = "[add]cast",
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
+				},
+			},
+		},
+		{ -- 暗黑法球
+			spells = {
+				{426860},
+			},
+			options = {
+				{ -- 计时条 暗黑法球
+					category = "AlertTimerbar",
+					type = "cast",
+					spellID = 426860,
+					color = {.54, 0, .89},
+					text = L["大球"],
+					sound = "[ball]cast",
+					glow = true,
+				},
+				{ -- 声音 暗黑法球[音效:注意射线]（✓）
+					category = "Sound",
+					spellID = 450855,
+					sub_event = "SPELL_AURA_APPLIED",
+					private_aura = true,
+					file = "[ray]",
 				},
 			},
 		},

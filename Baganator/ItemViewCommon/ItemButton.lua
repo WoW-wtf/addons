@@ -500,18 +500,41 @@ function BaganatorRetailLiveContainerItemButtonMixin:MyOnLoad()
   -- reagents if there is space
   self:HookScript("PreClick", function()
     if BankFrame:IsShown() and self.BGR and self.BGR.itemID and BankFrame.activeTabIndex ~= addonTable.Constants.BlizzardBankTabConstants.Warband then
+      BankFrame.selectedTab = 1
+
       local _
       self.BGR.stackLimit, _, _, _, _, _, _, _, _, self.BGR.isReagent = select(8, C_Item.GetItemInfo(self.BGR.itemID))
       if self.BGR.isReagent then
-        local reagentBank = Syndicator.API.GetCharacter(Syndicator.API.GetCurrentCharacter()).bank[tIndexOf(Syndicator.Constants.AllBankIndexes, Enum.BagIndex.Reagentbank)]
+        local bank = Syndicator.API.GetCharacter(Syndicator.API.GetCurrentCharacter()).bank
+        local reagentBank = bank[tIndexOf(Syndicator.Constants.AllBankIndexes, Enum.BagIndex.Reagentbank)]
+        local emptySlotFound = false
+        --Find a matching stack for the item, prioritising reagent bank
         for _, item in ipairs(reagentBank) do
-          if item.itemID == nil or (item.itemID == self.BGR.itemID and self.BGR.stackLimit - item.itemCount >= self.BGR.itemCount) then
+          if item.itemID == self.BGR.itemID and self.BGR.stackLimit - item.itemCount >= self.BGR.itemCount then
             BankFrame.selectedTab = 2
             return
+          elseif item.itemID == nil then -- Got an empty slot, remember this for if no stacks found
+            emptySlotFound = true
           end
         end
+
+        -- Find a matching stack in the regular bank
+        for index, bag in ipairs(bank) do
+          if Syndicator.Constants.AllBankIndexes[index] ~= Enum.BagIndex.Reagentbank then
+            for _, slot in ipairs(bag) do
+              if slot.itemID == self.BGR.itemID and slot.itemCount + self.BGR.itemCount <= self.BGR.stackLimit then
+                return
+              end
+            end
+          end
+        end
+
+        -- No matching stacks, find an empty slot in the reagent bank (if
+        -- possible)
+        if emptySlotFound then
+          BankFrame.selectedTab = 2
+        end
       end
-      BankFrame.selectedTab = 1
     end
   end)
   self:HookScript("PostClick", function()
@@ -528,6 +551,11 @@ function BaganatorRetailLiveContainerItemButtonMixin:MyOnLoad()
         SetWidgetsAlpha(self, self.BGR == nil or self.BGR.matchesSearch ~= false)
       end
     end
+  end)
+
+  self:HookScript("OnEnter", function(self)
+    local bagID, slotID = self:GetParent():GetID(), self:GetID()
+    addonTable.NewItems:ClearNewItem(bagID, slotID)
   end)
 end
 
@@ -704,11 +732,13 @@ function BaganatorRetailLiveGuildItemButtonMixin:OnEnter()
   else
     ResetCursor()
   end
-  if self.tabIndex ~= GetCurrentGuildBankTab() then
+  if self.tabIndex ~= nil and self.tabIndex ~= GetCurrentGuildBankTab() then
     SetCurrentGuildBankTab(self.tabIndex)
   end
-  GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-  GameTooltip:SetGuildBankItem(self.tabIndex, self:GetID())
+  if self.tabIndex ~= nil then
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    GameTooltip:SetGuildBankItem(self.tabIndex, self:GetID())
+  end
 end
 
 function BaganatorRetailLiveGuildItemButtonMixin:OnLeave()
@@ -1003,33 +1033,6 @@ function BaganatorClassicCachedItemButtonMixin:OnLeave()
   GameTooltip:Hide()
 end
 
-local UpdateQuestItemClassic
-if addonTable.Constants.IsVanilla then
-  UpdateQuestItemClassic = function(self)
-    local questTexture = _G[self:GetName().."IconQuestTexture"]
-    if questTexture then
-      questTexture:Hide()
-    end
-  end
-else
-  UpdateQuestItemClassic = function(self)
-    local questInfo = C_Container.GetContainerItemQuestInfo(self:GetParent():GetID(), self:GetID());
-    self.BGR.isQuestItem = questInfo.isQuestItem or questInfo.questId
-
-    local questTexture = _G[self:GetName().."IconQuestTexture"];
-
-    if ( questInfo.questId and not questInfo.isActive ) then
-      questTexture:SetTexture(TEXTURE_ITEM_QUEST_BANG);
-      questTexture:Show();
-    elseif ( questInfo.questId or questInfo.isQuestItem ) then
-      questTexture:SetTexture(TEXTURE_ITEM_QUEST_BORDER);
-      questTexture:Show();
-    else
-      questTexture:Hide();
-    end
-  end
-end
-
 BaganatorClassicLiveContainerItemButtonMixin = {}
 
 -- Alter the item button so that the tooltip works both on bag items and bank
@@ -1074,7 +1077,20 @@ end
 
 
 function BaganatorClassicLiveContainerItemButtonMixin:BGRUpdateQuests()
-  UpdateQuestItemClassic(self)
+  local questInfo = C_Container.GetContainerItemQuestInfo(self:GetParent():GetID(), self:GetID());
+  self.BGR.isQuestItem = questInfo.isQuestItem or questInfo.questID
+
+  local questTexture = _G[self:GetName().."IconQuestTexture"];
+
+  if ( questInfo.questID and not questInfo.isActive ) then
+    questTexture:SetTexture(TEXTURE_ITEM_QUEST_BANG);
+    questTexture:Show();
+  elseif ( questInfo.questID or questInfo.isQuestItem ) then
+    questTexture:SetTexture(TEXTURE_ITEM_QUEST_BORDER);
+    questTexture:Show();
+  else
+    questTexture:Hide();
+  end
 end
 
 function BaganatorClassicLiveContainerItemButtonMixin:OnLeave()
@@ -1257,8 +1273,13 @@ function BaganatorClassicLiveGuildItemButtonMixin:OnEnter()
   else
     ResetCursor()
   end
-  GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-  GameTooltip:SetGuildBankItem(self.tabIndex, self:GetID())
+  if self.tabIndex ~= nil and self.tabIndex ~= GetCurrentGuildBankTab() then
+    SetCurrentGuildBankTab(self.tabIndex)
+  end
+  if self.tabIndex ~= nil then
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    GameTooltip:SetGuildBankItem(self.tabIndex, self:GetID())
+  end
 end
 
 function BaganatorClassicLiveGuildItemButtonMixin:OnLeave()

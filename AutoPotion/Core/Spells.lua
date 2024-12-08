@@ -10,6 +10,8 @@ ham.bitterImmunity = 383762
 ham.desperatePrayer = 19236
 ham.expelHarm = 322101
 ham.healingElixir = 122281
+ham.darkPact = 108416
+ham.vampiricBlood = 55233
 
 --Racials WTF These are all seperate Spells
 ham.giftOfTheNaaruDK = 59545
@@ -32,6 +34,8 @@ table.insert(ham.supportedSpells, ham.bitterImmunity)
 table.insert(ham.supportedSpells, ham.desperatePrayer)
 table.insert(ham.supportedSpells, ham.expelHarm)
 table.insert(ham.supportedSpells, ham.healingElixir)
+table.insert(ham.supportedSpells, ham.darkPact)
+table.insert(ham.supportedSpells, ham.vampiricBlood)
 table.insert(ham.supportedSpells, ham.giftOfTheNaaruDK)
 table.insert(ham.supportedSpells, ham.giftOfTheNaaruHunter)
 table.insert(ham.supportedSpells, ham.giftOfTheNaaruMage)

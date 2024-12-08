@@ -34,6 +34,52 @@ G.Encounters[2392] = {
 					text = L["召唤小怪"],
 					sound = "[add]cast"
 				},
+				{ -- 文字 肉钩 倒计时（✓）
+					category = "TextAlert",
+					type = "spell",
+					color = {1, 0, 0},
+					preview = T.GetIconLink(322681)..L["倒计时"],
+					data = {
+						spellID = 322681,
+						events =  {
+							["COMBAT_LOG_EVENT_UNFILTERED"] = true,
+						},
+						info = {
+							mobs = {},
+							mob_count = 0,
+							strs = {}
+						}
+					},
+					update = function(self, event, ...)
+						if event == "COMBAT_LOG_EVENT_UNFILTERED" then
+							local _, sub_event, _, sourceGUID, _, _, _, destGUID, _, _, _, spellID, spellName = CombatLogGetCurrentEventInfo()		
+							if sub_event == "SPELL_AURA_APPLIED" and spellID == 334321 then
+								self.data.info.mob_count = self.data.info.mob_count + 1
+								self.data.info.mobs[destGUID] = self.data.info.mob_count
+								local index = self.data.info.mobs[destGUID]
+								if not self.data.info.strs[index] then
+									self.data.info.strs[index] = T.CreateAlertText("text332681_"..index, 1)
+								end
+								T.Start_Text_DelayTimer(self.data.info.strs[index], 10, L["小怪"]..self.data.info.mobs[destGUID]..T.GetIconLink(322681), true)
+							elseif sub_event == "SPELL_CAST_SUCCESS" and spellID == 322681 then
+								if self.data.info.mobs[sourceGUID] then
+									local index = self.data.info.mobs[sourceGUID]
+									T.Start_Text_DelayTimer(self.data.info.strs[index], 18, L["小怪"]..index..T.GetIconLink(322681), true)
+								end
+							elseif sub_event == "SPELL_AURA_REMOVED" and spellID == 334321 then
+								if self.data.info.mobs[destGUID] then
+									local index = self.data.info.mobs[destGUID]
+									if self.data.info.strs[index] then
+										T.Stop_Text_Timer(self.data.info.strs[index])
+									end
+								end
+							end
+						elseif event == "ENCOUNTER_SHOW" then
+							self.data.info.mob_count = 0
+							self.data.info.mobs = table.wipe(self.data.info.mobs)
+						end
+					end,
+				},
 				{ -- 计时条 肉钩
 					category = "AlertTimerbar",
 					type = "cleu",
@@ -55,7 +101,7 @@ G.Encounters[2392] = {
 					spellID = 322681,
 					hl = "org_flash",
 					tip = L["锁定"],
-					msg = {str_applied = "%name %spell", str_rep = "%dur"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 				{ -- 对我施法图标 毁伤
 					category = "AlertIcon",
@@ -63,16 +109,6 @@ G.Encounters[2392] = {
 					spellID = 320376,
 					hl = "yel_flash",
 					ficon = "0",
-				},
-				{ -- 图标 肉钩
-					category = "AlertIcon",
-					type = "aura",
-					aura_type = "HARMFUL",
-					unit = "player",
-					spellID = 322681,
-					hl = "org_flash",
-					tip = L["锁定"],
-					msg = {str_applied = "%name %spell", str_rep = "%dur"},
 				},
 			},
 		},
@@ -87,8 +123,8 @@ G.Encounters[2392] = {
 					spellID = 327664,
 					spellIDs = {[334476] = true,},
 					hl = "yel_flash",
-					msg = {str_applied = "%name %spell"},
-				},		
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
+				},
 				{ -- 图标 防腐剂
 					category = "AlertIcon",
 					type = "aura",
@@ -153,7 +189,7 @@ G.Encounters[2392] = {
 					type = "com",
 					spellID = 343556,
 					hl = "yel_flash",
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 				{ -- 团队框架图标 病态凝视
 					category = "RFIcon",

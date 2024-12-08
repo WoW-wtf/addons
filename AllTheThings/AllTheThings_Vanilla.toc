@@ -3,9 +3,9 @@
 ## Name: AllTheThings
 ## Notes: Addon for Tracking Collections & Account Completion
 ## Author: Crieve-Sargeras
-## Version: 4.1.8
-## Interface: 11504, 11505
-## X-Interface: 11504, 11505
+## Version: 4.1.11
+## Interface: 11505
+## X-Interface: 11505
 ## X-Wago-ID: yQKyY5K7
 ## X-Curse-Project-ID: 267285
 ## SavedVariables: ATTCharacterData, ATTAccountWideData, AllTheThingsSavedVariables, AllTheThingsSettings, AllTheThingsAD, AllTheThingsProfiles, AllTheThingsAuctionData, AllTheThingsDebugData, AllTheThingsHarvestItems

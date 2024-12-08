@@ -112,7 +112,7 @@ G.Encounters[2584] = {
 					type = "com",
 					spellID = 439506,
 					hl = "yel_flash",
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},				
 			},
 		},

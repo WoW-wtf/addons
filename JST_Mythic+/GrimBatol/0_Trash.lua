@@ -90,7 +90,7 @@ G.Encounters["71Trash"] = {
 					type = "com",
 					spellID = 451612,
 					hl = "yel_flash",	
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 				{ -- 团队框架图标 暮光烈焰
 					category = "RFIcon",
@@ -368,7 +368,7 @@ G.Encounters["71Trash"] = {
 					type = "com",
 					spellID = 451391,
 					hl = "yel_flash",	
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 				{ -- 团队框架图标 腐蚀
 					category = "RFIcon",

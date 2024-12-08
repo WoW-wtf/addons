@@ -1,0 +1,18 @@
+tag 81021e2b51281578de9bfee6c52ac8adb5dc2894 v1.12.16
+Author:	Filip Stenstrom <filip.stenstrom.4488@gmail.com>
+Date:	Sat Nov 9 13:56:36 2024 +0100
+
+Tag v1.12.16
+
+commit a4c2bff42bfb183edf58838517fa1f21c2de29b5
+Author: Filip Stenstrom <filip.stenstrom.4488@gmail.com>
+Date:   Sat Nov 9 13:56:23 2024 +0100
+
+    Bump to v1.12.16
+
+commit 6f790ba2917f34262ca7f5fad292a5ba42b7d476
+Author: Filip Stenstrom <filip.stenstrom.4488@gmail.com>
+Date:   Sat Nov 9 13:55:41 2024 +0100
+
+    Change Huolon respawn to 20 min
+

@@ -2,7 +2,7 @@
 ## Title: Mount Journal Enhanced
 ## Notes: Extends the default Mount Journal
 ## Author: eXochron
-## Version: 2.43.0
+## Version: 2.44.0
 ## SavedVariablesPerCharacter: MJEPersonalSettings
 ## SavedVariables: MJEGlobalSettings, MJETrackingData
 ## X-Curse-Project-ID: 86372
@@ -59,6 +59,7 @@ UI\DisplayStatistics.lua
 UI\Hotkeys.lua
 UI\MountListDropDown.lua
 UI\MountSpecialButton.lua
+UI\PetAssignment.lua
 UI\SettingsDropDown.lua
 # UI\DressUpButton.lua # no mount preview possible yet
 UI\SummonRandomButton.lua

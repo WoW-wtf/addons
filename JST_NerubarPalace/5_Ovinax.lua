@@ -1002,6 +1002,7 @@ G.Encounters[2612] = {
 										T.msg(string.format(L["驱散讯息序号过滤"], info.format_name, T.GetIconLink(frame.aura_id)))
 									end
 								else
+									local info = T.GetGroupInfobyGUID(GUID)
 									T.msg(string.format(L["驱散讯息无光环"], info.format_name, T.GetIconLink(frame.aura_id)))
 								end
 							end

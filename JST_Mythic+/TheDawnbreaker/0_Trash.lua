@@ -146,6 +146,11 @@ G.Encounters["1270Trash"] = {
 				{453345},
 			},
 			options = {				
+				{ -- 团队框架图标
+					category = "RFIcon",
+					type = "Cast",
+					spellID = 453345,
+				},
 				{ -- 图标 深渊朽烂
 					category = "AlertIcon",
 					type = "aura",
@@ -154,6 +159,7 @@ G.Encounters["1270Trash"] = {
 					spellID = 453345,
 					tip = L["强力DOT"],
 					hl = "red",
+					sound = "[defense]",
 				},
 			},
 		},
@@ -162,13 +168,20 @@ G.Encounters["1270Trash"] = {
 				{432565},
 			},
 			options = {				
+				{ -- 计时条 黑暗之霰
+					category = "AlertTimerbar",
+					type = "cast",
+					spellID = 432565,
+					color = {.2, .4, 1},
+					sound = "[mindstep]cast",
+				},
 				{ -- 对我施法图标 黑暗之霰
 					category = "AlertIcon",
 					type = "com",
 					spellID = 432565,
 					hl = "yel_flash",
 					sound = "[mindstep]cast",
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 			},
 		},
@@ -227,7 +240,7 @@ G.Encounters["1270Trash"] = {
 					unit = "player",
 					spellID = 431333,
 					hl = "org",
-					tip = L["拉人"],
+					sound = "[defense]"
 				},
 			},
 		},
@@ -311,6 +324,29 @@ G.Encounters["1270Trash"] = {
 					spellID = 431350,
 					hl = "red",
 					tip = L["分散"],
+				},
+			},
+		},
+		{ -- 暗黑法球
+			spells = {
+				{450854},
+			},
+			options = {
+				{ -- 计时条 暗黑法球
+					category = "AlertTimerbar",
+					type = "cast",
+					spellID = 450854,
+					color = {.54, 0, .89},
+					text = L["大球"],
+					sound = "[ball]cast",
+					glow = true,
+				},
+				{ -- 声音 暗黑法球[音效:注意射线]（✓）
+					category = "Sound",
+					spellID = 450855,
+					sub_event = "SPELL_AURA_APPLIED",
+					private_aura = true,
+					file = "[ray]",
 				},
 			},
 		},

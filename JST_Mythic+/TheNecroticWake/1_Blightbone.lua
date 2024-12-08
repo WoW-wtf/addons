@@ -22,12 +22,37 @@ G.Encounters[2395] = {
 				{320596},
 			},
 			options = {
+				{ -- 文字 深重呕吐 倒计时
+					category = "TextAlert",
+					type = "spell",
+					color = {.58, .49, .4},
+					preview = T.GetIconLink(320596)..L["倒计时"],
+					data = {
+						spellID = 320596,
+						events =  {
+							["UNIT_SPELLCAST_START"] = true,
+							["ENCOUNTER_PHASE"] = true,
+						},					
+						info = {							
+							["all"] = {
+								[1] = {11, 33, 32, 43, 33, 32, 43},
+							},
+						},
+						cd_args = {
+							round = true,
+						},
+					},
+					update = function(self, event, ...)
+						T.UpdateCooldownTimer("UNIT_SPELLCAST_START", "boss1", 320596, T.GetIconLink(320596), self, event, ...)
+					end,
+				},
 				{ -- 对我施法图标 深重呕吐
 					category = "AlertIcon",
 					type = "com",
 					spellID = 320596,
 					hl = "yel_flash",
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
+					sound = "[sound_boxing]",
 				},
 				{ -- 团队框架图标 深重呕吐
 					category = "RFIcon",

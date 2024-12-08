@@ -173,7 +173,7 @@ end
 
 -- 获取NPCID
 T.GetUnitNpcID = function(unit)
-	local GUID = UnitGUID(unit)
+	local GUID = unit and UnitGUID(unit)
 	if GUID then
 		return select(6, strsplit("-", GUID))
 	end

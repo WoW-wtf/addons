@@ -28,7 +28,7 @@ G.Encounters[2566] = {
 					spellID = 420739,
 					hl = "yel_flash",
 					ficon = "5",
-					msg = {str_applied = "%name %spell"},					
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 				{ -- 图标 不稳定电荷
 					category = "AlertIcon",
@@ -67,7 +67,7 @@ G.Encounters[2566] = {
 					type = "com",
 					spellID = 419870,
 					hl = "yel_flash",
-					msg = {str_applied = "%name %spell"},
+					msg = {str_applied = "%name %spell", str_rep = "%spell %dur"},
 				},
 			},
 		},
